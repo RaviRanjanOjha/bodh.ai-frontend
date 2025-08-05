@@ -1,6 +1,3 @@
-/**
- * Upload Context Hook
- */
 import { useContext } from "react";
 import { UploadContext } from "../contexts/UploadContext";
 

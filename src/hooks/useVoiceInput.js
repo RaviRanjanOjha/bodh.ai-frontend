@@ -1,6 +1,3 @@
-/**
- * Voice Input Hook
- */
 import { useState, useCallback, useRef } from "react";
 
 export const useVoiceInput = () => {

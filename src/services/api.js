@@ -36,25 +36,6 @@ export const chat = async (message, sessionId = null) => {
   return result;
 };
  
-// export const chat = async (prompt, sessionId, rawPrompt = null) => {
-//   const body={
-//     message: rawPrompt || prompt,
-//     sessionId: sessionId
-//   };
-//   const response = await fetch(`${API_BASE_URL}/chat`, {
-//     method: 'POST',
-//     headers: {'Content-Type': 'application/json',},
-//     body: JSON.stringify(body),
-//     credentials: 'include'
-//   });
- 
-//   if (!response.ok) {
-//     const errorData = await response.json();
-//     throw new Error(errorData.detail || 'Network response was not ok');
-//   }
-//   return response.json();
-// };
- 
 export const getConversationHistory = async () => {
   console.log("🟦 Fetching conversation history...");
   const response = await fetch(`${API_BASE_URL}/chat/history`, {

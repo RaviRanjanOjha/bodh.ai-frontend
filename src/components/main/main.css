@@ -193,25 +193,6 @@
   background: transparent;
 }
 
-/* .genui-icon {
-  width: 24px;
-  height: 24px;
-  background: #dc3545;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.genui-icon::after {
-  content: "";
-  width: 16px;
-  height: 16px;
-  background: white;
-  border-radius: 2px;
-} */
-
-/* Message Content Styles */
 .message-content {
   flex: 1;
   display: flex;

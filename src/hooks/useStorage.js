@@ -1,6 +1,3 @@
-/**
- * Local Storage Hook
- */
 import { useState, useEffect, useCallback } from "react";
 import {
   getStorageItem,

@@ -1,8 +1,4 @@
-import React from 'react';
-import { assets } from "../../assets/assets";
-import './card.css'; // import the CSS styles
-// import LanguageIcon from '@mui/icons-material/Language';
-// import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import './card.css';
  
 const Card = ({ size = 'medium',iconLeft,iconRight, header, footer, children,onClick={onClick} }) => {
  return (

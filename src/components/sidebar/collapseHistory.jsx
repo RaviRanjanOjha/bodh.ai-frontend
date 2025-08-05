@@ -1,377 +1,7 @@
-// import React, { useState } from 'react';
-// import { useCallback , useContext} from 'react';
-// import { Context } from '../../context/Context';
-// import { FaTrash } from 'react-icons/fa';
-
-// import {
-//   Accordion,
-//   AccordionSummary,
-//   AccordionDetails,
-//   List,
-//   ListItem,
-//   ListItemIcon,
-//   ListItemText,
-//   IconButton,
-//   Menu,
-//   MenuItem,
-//   Typography,
-//   Box,
-//   CircularProgress,
-// } from '@mui/material';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-// const DateAccordion = ({
-//   history = [],
-//   historyLoading,
-//   historyError,
-//   selectedConversation,
-//   fetchConversationDetails,
-//   assets = { message_icon: '' },
-//   formatDate = (date) => date,
-//   searchQuery="",
-// }) => {
-//     const {
-//     fetchHistory,
-//     deleteConversationById,
-//     } = useContext(Context);
-//   const [anchorEl, setAnchorEl] = useState(null);
-//   const [menuConvId, setMenuConvId] = useState(null);
-
-//   const handleMenuOpen = (event, convId) => {
-//     setAnchorEl(event.currentTarget);
-//     setMenuConvId(convId);
-//   };
-
-//   const handleMenuClose = () => {
-//     setAnchorEl(null);
-//     setMenuConvId(null);
-//   };
-
-//   const handleAction = (action) => {
-//     // Implement your action logic here
-//     handleMenuClose();
-//   };
-
-//   const handleDeleteConversation = useCallback(
-//       async (sessionId, event) => {
-//         // Prevent event bubbling to parent onClick
-//         event.stopPropagation();
-  
-//         const confirmed = window.confirm(
-//           "Are you sure you want to delete this conversation? This action cannot be undone."
-//         );
-  
-//         if (!confirmed) return;
-  
-//         try {
-//           const success = await deleteConversationById(sessionId);
-//           if (success) {
-//             console.log("✅ Conversation deleted successfully");
-//             // Optionally refresh history to ensure sync
-//             await fetchHistory();
-//             handleMenuClose();
-//           }
-//         } catch (error) {
-//           console.error("❌ Failed to delete conversation:", error);
-//           alert("Failed to delete conversation. Please try again.");
-//         }
-//       },
-//       [deleteConversationById, fetchHistory]
-//     );
-  
-//   // Group conversations by date (replace with your actual grouping logic if needed)
-//   const groupedHistory = {
-//     Today: [],
-//     Yesterday: [],
-//     'Last 30 Days': [],
-//   };
-
-//   if (!searchQuery){
-//   history.forEach((conv) => {
-//     const updated = new Date(conv.updated_at || conv.timestamp);
-
-//     const updatedDate=new Date(updated);
-//     updatedDate.setHours(0,0,0,0);
-//     const now = new Date();
-//     now.setHours(0,0,0,0);
-//     const diff = Math.floor((now - updated) / (1000 * 60 * 60 * 24));
-
-//     if (diff ==0 ) groupedHistory.Today.push(conv);
-//     else if (diff ==1 ) groupedHistory.Yesterday.push(conv);
-//     else groupedHistory['Last 30 Days'].push(conv);
-//   });
-// }
-
-//   const renderConversations = (convs) => {
-//     if (historyLoading)
-//       return (
-//         <Box sx={{ background:'#1e1e1e',px: 2, py: 2, display: 'flex', alignItems: 'center' ,color:'#e0e0e0'}}>
-//           <CircularProgress size={20} sx={{ mr: 1 , color:'#90caf9'}} />
-//           <Typography>Loading conversations...</Typography>
-//         </Box>
-//       );
-//     if (historyError)
-//       return (
-//         <Typography sx={{ px: 2, py: 2, color: 'error.main' }}>
-//           Error loading history
-//         </Typography>
-//       );
-//     if (convs.length === 0)
-//       return (
-//         <Typography sx={{ px: 2, py: 2, color: '#aaa' }}>
-//           No conversations yet
-//         </Typography>
-//       );
-
-//     return (
-//       <List disablePadding>
-//         {convs.map((conv) => {
-//           const validMessages = Array.isArray(conv.messages)
-//             ? conv.messages.filter((msg) => msg?.content)
-//             : [];
-//           const messageCount = validMessages.length;
-//           const lastMessage = validMessages[validMessages.length - 1]?.content || '';
-
-//           return (
-//             <ListItem
-//               key={conv.session_id}
-//               sx={{
-//                 bgcolor:
-//                   selectedConversation?.session_id === conv.session_id
-//                     ? '#2c2c2c'
-//                     : '#1e1e1e',
-//                 borderRadius: 1,
-//                 mx: 1,
-//                 my: 0.5,
-//                 pl: 1,
-//                 position:'relative',
-//                 pr:6,
-//                 boxShadow: selectedConversation?.session_id === conv.session_id ? 1 : 0,
-//                 transition: 'background 0.2s',
-//                 cursor: 'pointer',
-//                 color:'#e0e0e0',
-//                 '&:hover': {
-//                   bgcolor: '#333',
-//                 },
-//               }}
-//               onClick={() => fetchConversationDetails(conv.session_id)}
-//               // secondaryAction={
-//               //   <IconButton onClick={(e) => handleMenuOpen(e, conv.session_id)} sx={{color:'#ccc'}}>
-//               //     <MoreVertIcon />
-//               //   </IconButton>
-//               // }
-//             >
-//               <ListItemIcon sx={{ minWidth: 36 }}>
-//                 {assets.message_icon ? (
-//                   <img
-//                     src={assets.message_icon}
-//                     alt="chat"
-//                     style={{ width: 24, height: 24 }}
-//                   />
-//                 ) : (
-//                   <Box
-//                     sx={{
-//                       width: 24,
-//                       height: 24,
-//                       bgcolor: '#333',
-//                       borderRadius: '50%',
-//                     }}
-//                   />
-//                 )}
-//               </ListItemIcon>
-//               <ListItemText
-//                 primary={
-//                   <Typography fontWeight="bold" fontSize={15} color='#fff'>
-//                     {conv.summary || 'New conversation'}
-//                   </Typography>
-//                 }
-//                 secondary={
-//                   <Box>
-//                     {messageCount > 0 && (
-//                       <Typography variant="caption" sx={{ mr: 1, color:'#aaa'}}>
-//                         {messageCount} {messageCount === 1 ? 'message' : 'messages'}
-//                       </Typography>
-//                     )}
-//                     <Typography variant="caption" sx={{ color: '#888' }}>
-//                       {formatDate(conv.updated_at || conv.timestamp)}
-//                     </Typography>
-//                     {lastMessage && (
-//                       <Typography
-//                         variant="body2"
-//                         sx={{
-//                           display: 'block',
-//                           color: '#aaa',
-//                           mt: 0.5,
-//                           fontSize: 13,
-//                         }}
-//                       >
-//                         {lastMessage.substring(0, 60)}
-//                         {lastMessage.length > 60 ? '...' : ''}
-//                       </Typography>
-//                     )}
-//                   </Box>
-//                 }
-//               />
-//               <Box sx={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)'}}>
-//                 <IconButton onClick={(e)=>{
-//                   e.stopPropagation();
-//                   handleMenuOpen(e,conv.session_id);
-//                 }}
-//                 sx={{color:'#ccc'}}
-//                 >
-//                   <MoreVertIcon/>
-//                 </IconButton>
-//               </Box>
-//             </ListItem>
-//           );
-//         })}
-//       </List>
-//     );
-//   };
-
-//   return (
-//     <Box
-//       sx={{
-//         background: '#121212',
-//         borderRadius: 3,
-//         boxShadow: 2,
-//         p: 2,
-//         m: 2,
-//         maxWidth: 480,
-//         color:'#e0e0e0'
-//       }}
-//     >   
-
-//       {searchQuery ? (
-//   // If searching, don't group — just render everything in one list
-//   <Accordion
-//     defaultExpanded
-//     sx={{
-//       background: '#1e1e1e',
-//       borderRadius: 2,
-//       boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-//       mb: 2,
-//       color: '#e0e0e0',
-//       '&:before': { display: 'none' },
-//     }}
-//   >
-//     <AccordionSummary
-//       expandIcon={<ExpandMoreIcon sx={{ color: '#e0e0e0' }} />}
-//       sx={{
-//         background: '#2c2c2c',
-//         borderRadius: 2,
-//         minHeight: 48,
-//         '& .MuiAccordionSummary-content': { my: 0.5 },
-//       }}
-//     >
-//       <Typography fontWeight="bold" sx={{ color: '#fff' }}>
-//         Search Results
-//       </Typography>
-//     </AccordionSummary>
-//     <AccordionDetails sx={{ p: 0 }}>
-//       {renderConversations(history)}
-//     </AccordionDetails>
-//   </Accordion>
-// ) : (
-//   Object.entries(groupedHistory).map(([label, convs]) => (
-//     <Accordion
-//       key={label}
-//       defaultExpanded
-//       sx={{
-//         background: '#1e1e1e',
-//         borderRadius: 2,
-//         boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-//         mb: 2,
-//         color: '#e0e0e0',
-//         '&:before': { display: 'none' },
-//       }}
-//     >
-//       <AccordionSummary
-//         expandIcon={<ExpandMoreIcon sx={{ color: '#e0e0e0' }} />}
-//         sx={{
-//           background: '#2c2c2c',
-//           borderRadius: 2,
-//           minHeight: 48,
-//           '& .MuiAccordionSummary-content': { my: 0.5 },
-//         }}
-//       >
-//         <Typography fontWeight="bold" sx={{ color: '#fff' }}>{label}</Typography>
-//       </AccordionSummary>
-//       <AccordionDetails sx={{ p: 0 }}>
-//         {renderConversations(convs)}
-//       </AccordionDetails>
-//     </Accordion>
-//   ))
-// )}
-//       {/* {Object.entries(groupedHistory).map(([label, convs]) => (
-//         <Accordion
-//           key={label}
-//         //   defaultExpanded
-//           sx={{
-//             background: '#1e1e1e',
-//             borderRadius: 2,
-//             boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-//             mb: 2,
-//             color:'#e0e0e0',
-//             '&:before': { display: 'none' },
-//           }}
-//         >
-//           <AccordionSummary
-//             expandIcon={<ExpandMoreIcon sx={{color:'#e0e0e0'}}/>}
-//             sx={{
-//               background: '#2c2c2c',
-//               borderRadius: 2,
-//               minHeight: 48,
-//               '& .MuiAccordionSummary-content': { my: 0.5 },
-//             }}
-//           >
-//             <Typography fontWeight="bold" sx={{color:'#fff'}}>{label}</Typography>
-//           </AccordionSummary>
-//           <AccordionDetails sx={{ p: 0 }}>
-//             {renderConversations(convs)}
-//           </AccordionDetails>
-//         </Accordion>
-//       ))} */}
-
-//       <Menu
-//         anchorEl={anchorEl}
-//         open={Boolean(anchorEl)}
-//         onClose={handleMenuClose}
-//         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-//         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-//         PaperProps={{
-//             sx:{
-//                 bgcolor:'#2c2c2c',
-//                 color:'#e0e0e0',
-//             },
-//         }}
-//       >
-//         <MenuItem onClick={() => handleAction('Favourite')} >Favourite</MenuItem>
-//         <MenuItem onClick={(e) =>
-//                 handleDeleteConversation(menuConvId, e)
-//                 }  >
-//             {/* <FaTrash
-//                 className="delete-icon"
-//                 onClick={(e) =>
-//                 handleDeleteConversation(conv.session_id, e)
-//                 }
-//                 title="Delete conversation"
-//             /> */}
-//             Delete
-//         </MenuItem>
-//       </Menu>
-//     </Box>
-//   );
-// };
-
-// export default DateAccordion;
-
-
 import React, { useState, useEffect } from "react";
 import { useCallback, useContext } from "react";
 import { Context } from "../../context/Context";
-import { FaTrash, FaStar, FaEnvelope} from "react-icons/fa";
+import { FaTrash, FaStar, FaEnvelope } from "react-icons/fa";
 import {
   Accordion,
   AccordionSummary,
@@ -388,8 +18,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import './collapseHistory.css'
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import "./collapseHistory.css";
 
 const DateAccordion = ({
   history = [],
@@ -412,9 +42,9 @@ const DateAccordion = ({
   } = useContext(Context);
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuConvId, setMenuConvId] = useState(null);
-  const [menuSection,setMenuSection]=useState(null);
+  const [menuSection, setMenuSection] = useState(null);
 
-  const handleMenuOpen = (event, convId,section) => {
+  const handleMenuOpen = (event, convId, section) => {
     event.stopPropagation(); // Prevent triggering the conversation click
     setAnchorEl(event.currentTarget);
     setMenuConvId(convId);
@@ -427,7 +57,7 @@ const DateAccordion = ({
   };
 
   const handleAction = (action) => {
-    if (action === "Favourite" || action==="Unfavourite") {
+    if (action === "Favourite" || action === "Unfavourite") {
       handleToggleFavorite(menuConvId);
     }
     console.log("Action:", action);
@@ -530,7 +160,7 @@ const DateAccordion = ({
     });
   }
 
-  const renderConversations = (convs,sectionLabel) => {
+  const renderConversations = (convs, sectionLabel) => {
     if (historyLoading)
       return (
         <Box
@@ -611,7 +241,7 @@ const DateAccordion = ({
                 <IconButton
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleMenuOpen(e, conv.session_id,sectionLabel);
+                    handleMenuOpen(e, conv.session_id, sectionLabel);
                   }}
                   sx={{ color: "#ccc" }}
                 >
@@ -622,7 +252,7 @@ const DateAccordion = ({
               <ListItemIcon className="chat-icon" sx={{ minWidth: 36 }}>
                 {assets.message_icon ? (
                   // <FaEnvelope/>
-                  <img 
+                  <img
                     src={assets.chat}
                     alt="chat"
                     style={{ width: 16, height: 16 }}
@@ -640,7 +270,7 @@ const DateAccordion = ({
               </ListItemIcon>
               <ListItemText
                 primary={
-                  <Typography className="conv-summary" >
+                  <Typography className="conv-summary">
                     {highlightSearchQuery(
                       conv.summary || "New conversation",
                       searchQuery
@@ -753,40 +383,11 @@ const DateAccordion = ({
               </Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ p: 0 }}>
-              {renderConversations(convs,label)}
+              {renderConversations(convs, label)}
             </AccordionDetails>
           </Accordion>
         ))
       )}
-      {/* {Object.entries(groupedHistory).map(([label, convs]) => (
-        <Accordion
-          key={label}
-        //   defaultExpanded
-          sx={{
-            background: '#1e1e1e',
-            borderRadius: 2,
-            boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
-            mb: 2,
-            color:'#e0e0e0',
-            '&:before': { display: 'none' },
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon sx={{color:'#e0e0e0'}}/>}
-            sx={{
-              background: '#2c2c2c',
-              borderRadius: 2,
-              minHeight: 48,
-              '& .MuiAccordionSummary-content': { my: 0.5 },
-            }}
-          >
-            <Typography fontWeight="bold" sx={{color:'#fff'}}>{label}</Typography>
-          </AccordionSummary>
-          <AccordionDetails sx={{ p: 0 }}>
-            {renderConversations(convs)}
-          </AccordionDetails>
-        </Accordion>
-      ))} */}
 
       <Menu
         anchorEl={anchorEl}
@@ -802,29 +403,28 @@ const DateAccordion = ({
           },
         }}
       >
-        {menuSection==="Favorites"
-        ?(
-        <MenuItem
-          onClick={() => handleAction("Unfavourite")}
-          sx={{
-            fontSize: "14px",
-            "&:hover": { bgcolor: "#404040" },
-          }} 
-        >
-          <FaStar style={{ marginRight: "8px", fontSize: "12px" }} />
-          Unfavourite
-        </MenuItem>
-        ):(
-            <MenuItem
-          onClick={() => handleAction("Favourite")}
-          sx={{
-            fontSize: "14px",
-            "&:hover": { bgcolor: "#404040" },
-          }} 
-        >
-          <FaStar style={{ marginRight: "8px", fontSize: "12px" }} />
-          Favourite
-        </MenuItem>
+        {menuSection === "Favorites" ? (
+          <MenuItem
+            onClick={() => handleAction("Unfavourite")}
+            sx={{
+              fontSize: "14px",
+              "&:hover": { bgcolor: "#404040" },
+            }}
+          >
+            <FaStar style={{ marginRight: "8px", fontSize: "12px" }} />
+            Unfavourite
+          </MenuItem>
+        ) : (
+          <MenuItem
+            onClick={() => handleAction("Favourite")}
+            sx={{
+              fontSize: "14px",
+              "&:hover": { bgcolor: "#404040" },
+            }}
+          >
+            <FaStar style={{ marginRight: "8px", fontSize: "12px" }} />
+            Favourite
+          </MenuItem>
         )}
         <MenuItem
           onClick={(e) => {

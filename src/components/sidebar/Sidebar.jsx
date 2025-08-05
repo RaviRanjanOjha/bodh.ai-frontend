@@ -15,14 +15,6 @@ import { MdAttachment } from "react-icons/md";
 import { debounce } from "../../utils/chatUtils";
 import { CHAT_CONFIG, UI_CONFIG } from "../../constants";
 import DateAccordion from "./collapseHistory";
-// import { ThemeProvider , createTheme} from "@mui/material/styles";
-// import { CssBaseline } from "@mui/material";
-
-// const darkTheme = createTheme({
-//   palette: {
-//     mode: "dark",
-//   },
-// });
 
 const Sidebar = (isVisible) => {
   const {

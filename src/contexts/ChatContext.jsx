@@ -1,6 +1,4 @@
-/**
- * Chat Context - Handles chat-specific state and operations
- */
+
 import React, { createContext, useCallback } from "react";
 import PropTypes from "prop-types";
 import { useChat } from "../hooks/useChat";

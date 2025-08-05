@@ -1,6 +1,3 @@
-/**
- * App Providers - Combines all context providers
- */
 import React from "react";
 import PropTypes from "prop-types";
 import ErrorBoundary from "../components/errorBoundary/ErrorBoundary";

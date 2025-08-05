@@ -13,10 +13,8 @@ import Button from "../button/Button.jsx";
 import Input from "../input/Input.jsx";
 import { FaBars, FaUser } from "react-icons/fa";
 import { formatTime } from "../../utils/dateUtils";
-// import { DEFAULT_CARD_DATA } from "../../constants";
 import { scrollToBottom } from "../../utils/chatUtils";
 import { updateUrlWithSession } from "../../utils/urlUtils";
-import AuthPopup from "../Auth/Authpopup.jsx";
 import { Button as MUIButton, Menu, MenuItem } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
@@ -25,7 +23,6 @@ import FrontHandIcon from "@mui/icons-material/FrontHand";
 import ChatIcon from "@mui/icons-material/Chat";
 import GTranslateIcon from "@mui/icons-material/GTranslate";
 import OutboundOutlinedIcon from "@mui/icons-material/OutboundOutlined";
-// import {UserCircleDashed} from "phosphor-react";
 import ReactMarkdown from "react-markdown";
 
 const Main = ({ isSidebarVisible, toggleSidebar }) => {
@@ -54,36 +51,6 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
       scrollToBottom(chatContainerRef.current, true);
     }
   }, [resultData, loading]);
-
-  // useEffect(() => {
-  //   if (chatContainerRef.current && resultData && loading === false) {
-  //     scrollToBottom(chatContainerRef.current, true);
-  //   }
-  // }, [resultData, loading]);
-
-  // useEffect(() => {
-  //   if (selectedConversation && chatContainerRef.current) {
-  //     setTimeout(() => {
-  //       scrollToBottom(chatContainerRef.current, false); // No smooth scroll for initial load
-  //     }, 200);
-  //   }
-  // }, [selectedConversation]);
-
-  // useEffect(() => {
-  //   if (showResults && chatContainerRef.current) {
-  //     setTimeout(() => {
-  //       scrollToBottom(chatContainerRef.current, false); // Instant scroll for initial appearance
-  //     }, 100);
-  //   }
-  // }, [showResults]);
-
-  // useEffect(() => {
-  //   if (chatContainerRef.current && (resultData || selectedConversation)) {
-  //     setTimeout(() => {
-  //       scrollToBottom(chatContainerRef.current, false);
-  //     }, 50);
-  //   }
-  // }, [resultData, selectedConversation]);
 
   // Sync URL with current session - using utility
   useEffect(() => {
@@ -163,14 +130,6 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
     setAnchorEl(null);
   };
 
-  const [showAuthPopup, setShowAuthPopup] = useState(true);
-
-  useEffect(() => {
-    if (localStorage.getItem("isAuthenticated")) {
-      setShowAuthPopup(false);
-    }
-  }, []);
-
   const truncateText = (text, maxWords = 12) => {
     const words = text.split(" ");
     return words.length > maxWords
@@ -180,16 +139,6 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
 
   return (
     <>
-      {showAuthPopup && (
-        <AuthPopup
-          onLoginSuccess={(user) => {
-            console.log("Logged in:", user);
-            setShowAuthPopup(false); // or redirect user
-          }}
-          onClose={() => setShowAuthPopup(false)}
-        />
-      )}
-
       <div className="main">
         <div className="nav">
           <div className="dropdown-container">

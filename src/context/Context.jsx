@@ -14,8 +14,6 @@ import {
   getFAQs,
 } from "../services/api";
 const API_BASE_URL = "https://localhost:8000";
-// const API_BASE_URL = "https://localhost:8000";
-// Create the Context directly here for backward compatibility
 export const Context = createContext();
 
 const ContextProvider = (props) => {
@@ -302,12 +300,6 @@ const ContextProvider = (props) => {
       );
     } finally {
       const totalDelay = charArray.length * 10 + 50;
-      // setTimeout(() => {
-      //   setIsStreaming(false);
-      //   if (!abortRef.current) {
-      //     setLoading(false);
-      //   }
-      // }, totalDelay);
 
       setTimeout(() => {
         requestAnimationFrame(() => {

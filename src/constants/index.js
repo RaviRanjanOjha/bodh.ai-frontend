@@ -60,16 +60,6 @@ export const LOADING_STATES = {
   SUCCESS: "success",
 };
 
-// export const DEFAULT_CARD_DATA = [
-//    { title: "Our Capabilities", desc: "A brief idea on what we do" , iconLeft: <FrontHandIcon/>,iconRight : <OutboundOutlinedIcon/>},
-//     { title: "Available Languages", desc: "What languages can we chat in?",iconLeft: <GTranslateIcon/>,iconRight : <OutboundOutlinedIcon/> },
-//     {
-//       title: "Clients We Work With",
-//       desc: "Our list of elite clients across the globe",iconLeft: <ChatIcon/>,iconRight : <OutboundOutlinedIcon/>
-//     },
-//     {title: (<>Advisor <br /> Chat Guide</>),desc: "How to chat with an advisor?", iconLeft: <AccountCircleIcon />, iconRight: <OutboundOutlinedIcon />}
-// ];
-
 export const ERROR_MESSAGES = {
   NETWORK_ERROR:
     "Network connection failed. Please check your internet connection.",
