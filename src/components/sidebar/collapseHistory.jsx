@@ -350,7 +350,7 @@ const DateAccordion = ({
               expandIcon={<ExpandMoreIcon sx={{ color: "#e0e0e0" }} />}
               sx={{
                 background: "#221F20",
-                borderBottom: "1px solid #B1AAAA",
+                borderBottom: "1px solid #554E4E",
                 minHeight: 52,
                 "& .MuiAccordionSummary-content": { my: 0.5 },
               }}
