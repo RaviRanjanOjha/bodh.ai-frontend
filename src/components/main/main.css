@@ -1,4 +1,4 @@
-.layout{
+.layout {
   display: flex;
   width: 100%;
 }
@@ -24,7 +24,7 @@
   border-radius: 50px;
 }
 
-.main .dropdown-container{
+.main .dropdown-container {
   display: flex;
   justify-content: flex-end;
 }
@@ -239,7 +239,7 @@
 
 .message-text {
   border-radius: 1.5rem;
-  background: var(--Gray-5, #F8FAFC);
+  background: var(--Gray-5, #f8fafc);
   /* background: white; */
   padding: 16px;
   /* border-radius: 12px;
@@ -457,7 +457,6 @@
   justify-content: center;
   max-width: 900px;
   margin: 0 auto;
-  
 }
 
 /* Ensure body and html take full height */
@@ -507,10 +506,12 @@ body,
   max-width: "970px";
   margin: "0 auto";
 }
-.image-button .css-1umw9bq-MuiSvgIcon-root{width: 35px; height: 35px;}
+.image-button .css-1umw9bq-MuiSvgIcon-root {
+  width: 35px;
+  height: 35px;
+}
 /* Responsive design for mobile */
 @media (max-width: 768px) {
-
   .main-bottom {
     left: 0;
     right: 0;
@@ -605,7 +606,7 @@ body,
 .dropdown-container button {
   background: #eef2ff;
   border-radius: 50px;
-  color: #4A4459;
+  color: #4a4459;
   font-size: 16px;
   padding: 8px 16px;
   font-weight: 600;

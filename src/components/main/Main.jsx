@@ -171,6 +171,13 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
     }
   }, []);
 
+  const truncateText = (text, maxWords = 12) => {
+    const words = text.split(" ");
+    return words.length > maxWords
+      ? words.slice(0, maxWords).join(" ") + "..."
+      : text;
+  };
+
   return (
     <>
       {showAuthPopup && (
@@ -204,20 +211,6 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
               <MenuItem onClick={handleDropdownClose}>bodh.ai v1.0</MenuItem>
             </Menu>
           </div>
-          {/* <Button
- className="settings"
- icon={<FaBars />}
- shape="round"
- variant="primary"
- onClick={toggleSidebar}
- /> */}
-          {/* <Button
-          className="settings"
-          icon={<FaBars />}
-          shape="round"
-          variant="primary"
-          onClick={() => alert("Icon Only")}
-        /> */}
         </div>
         <div className="main-container">
           {!showResults && !uploadStatus ? (
@@ -244,7 +237,7 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                 }}
               >
                 {faqList.length > 0 ? (
-                  faqList.map((question, index) => (
+                  faqList.slice(0, 4).map((question, index) => (
                     <Card
                       key={index}
                       size="medium"
@@ -253,7 +246,9 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                       onClick={() => handleCardClick(question)}
                     >
                       <div>
-                        <strong>{question}</strong>
+                        <strong className="card-content">
+                          {truncateText(question, 8)}
+                        </strong>
                         <p>Click to ask this again</p>
                       </div>
                     </Card>

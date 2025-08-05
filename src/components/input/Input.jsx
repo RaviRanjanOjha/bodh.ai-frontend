@@ -70,31 +70,17 @@ const Input = ({
 
   return (
     <div className={`search-box ${disabled ? "disabled" : ""}`}>
-      {/* <Button
-        icon={<FaPaperclip />}
-        shape="round"
-        variant="primary"
-        onClick={handleAttachCLick}
-      /> */}
-
-      <input
-        type="file"
-        multiple
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
-
-      <input
-        type="text"
+      <textarea
+        className="chat-textarea"
         value={value}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
-        placeholder="Type your Prompt Here"
+        placeholder="Type your prompt here..."
         disabled={disabled}
+        rows={2}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !disabled && value.trim()) {
+          if (e.key === "Enter" && !e.shiftKey && !disabled && value.trim()) {
             e.preventDefault();
             onSend();
           }
