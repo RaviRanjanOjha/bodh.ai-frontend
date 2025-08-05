@@ -1,4 +1,3 @@
-import "./sidebar.css";
 import { useState, useRef } from "react";
 import { assets } from "../../assets/assets";
 import { useContext, useCallback } from "react";
@@ -15,6 +14,7 @@ import { MdAttachment } from "react-icons/md";
 import { debounce } from "../../utils/chatUtils";
 import { CHAT_CONFIG, UI_CONFIG } from "../../constants";
 import DateAccordion from "./collapseHistory";
+import "./sidebar.css";
 
 const Sidebar = (isVisible) => {
   const {
@@ -127,7 +127,6 @@ const Sidebar = (isVisible) => {
           className="open-sidebar-btn"
           alt="menu-icon"
           onClick={() => setIsCollapsed(false)}
-          // Collapse sidebar
         />
       )}
       <div className={`sidebarouter ${isCollapsed ? "collapsed" : ""}`}>
@@ -163,7 +162,6 @@ const Sidebar = (isVisible) => {
               </div>
 
               <div className="conversation-history">
-                {/* Search results section */}
                 <DateAccordion
                   history={searchQuery ? searchResults : history}
                   historyLoading={

@@ -36,8 +36,6 @@ const DateAccordion = ({
     deleteConversationById,
     fetchFavorites,
     favorites,
-    favoritesLoading,
-    favoritesError,
     toggleFavorite,
   } = useContext(Context);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -124,7 +122,6 @@ const DateAccordion = ({
             backgroundColor: "#ffd700",
             color: "#000",
             padding: "0 2px",
-            borderRadius: "2px",
           }}
         >
           {part}
@@ -166,8 +163,6 @@ const DateAccordion = ({
         <Box
           sx={{
             background: "#1e1e1e",
-            px: 2,
-            py: 2,
             display: "flex",
             alignItems: "center",
             color: "#e0e0e0",
@@ -179,7 +174,7 @@ const DateAccordion = ({
       );
     if (historyError)
       return (
-        <Typography sx={{ px: 2, py: 2, color: "error.main" }}>
+        <Typography sx={{ color: "error.main" }}>
           Error loading history
         </Typography>
       );
@@ -188,8 +183,6 @@ const DateAccordion = ({
         return (
           <Typography
             sx={{
-              px: 2,
-              py: 3,
               color: "#aaa",
               textAlign: "center",
             }}
@@ -223,10 +216,6 @@ const DateAccordion = ({
                   selectedConversation?.session_id === conv.session_id
                     ? "#2c2c2c"
                     : "#1e1e1e",
-                borderRadius: 1,
-                mx: 1,
-                my: 0.5,
-                pl: 1,
                 boxShadow:
                   selectedConversation?.session_id === conv.session_id ? 1 : 0,
                 transition: "background 0.2s",
@@ -251,7 +240,6 @@ const DateAccordion = ({
             >
               <ListItemIcon className="chat-icon" sx={{ minWidth: 36 }}>
                 {assets.message_icon ? (
-                  // <FaEnvelope/>
                   <img
                     src={assets.chat}
                     alt="chat"
@@ -288,9 +276,10 @@ const DateAccordion = ({
                         {messageCount === 1 ? "message" : "messages"}
                       </Typography>
                     )}
-                    <Typography variant="caption" sx={{ color: "#888" }}>
-                      {/* {formatDate(conv.updated_at || conv.timestamp)} */}
-                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "#888" }}
+                    ></Typography>
                     {lastMessage && (
                       <Typography
                         variant="body2"
@@ -326,11 +315,6 @@ const DateAccordion = ({
   return (
     <Box
       sx={{
-        background: "#121212",
-        borderRadius: 3,
-        boxShadow: 2,
-        p: 2,
-        m: 2,
         maxWidth: 480,
         color: "#e0e0e0",
       }}
@@ -341,12 +325,10 @@ const DateAccordion = ({
           <Typography
             variant="h6"
             sx={{
-              color: "#fff",
-              mb: 2,
+              color: "red",
               fontSize: "1.1rem",
               fontWeight: "bold",
               borderBottom: "1px solid #333",
-              pb: 1,
             }}
           >
             Search Results
@@ -359,12 +341,7 @@ const DateAccordion = ({
         Object.entries(groupedHistory).map(([label, convs]) => (
           <Accordion
             key={label}
-            // defaultExpanded
             sx={{
-              background: "#1e1e1e",
-              borderRadius: 2,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
-              mb: 2,
               color: "#e0e0e0",
               "&:before": { display: "none" },
             }}
@@ -372,15 +349,13 @@ const DateAccordion = ({
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{ color: "#e0e0e0" }} />}
               sx={{
-                background: "#2c2c2c",
-                borderRadius: 2,
-                minHeight: 48,
+                background: "#221F20",
+                borderBottom: "1px solid #B1AAAA",
+                minHeight: 52,
                 "& .MuiAccordionSummary-content": { my: 0.5 },
               }}
             >
-              <Typography fontWeight="bold" sx={{ color: "#fff" }}>
-                {label}
-              </Typography>
+              <Typography sx={{ color: "#e0e0e0" }}>{label}</Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ p: 0 }}>
               {renderConversations(convs, label)}
@@ -399,7 +374,6 @@ const DateAccordion = ({
           sx: {
             bgcolor: "#2c2c2c",
             color: "#e0e0e0",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
           },
         }}
       >
