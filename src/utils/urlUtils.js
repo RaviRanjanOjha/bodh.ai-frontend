@@ -8,9 +8,11 @@
  * @param {boolean} replace - Whether to replace or push state
  */
 export const updateUrlWithSession = (sessionId, replace = true) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const appVersion = urlParams.get('v');
   if (!sessionId) {
     // Clean URL if no session
-    const cleanUrl = window.location.pathname;
+    const cleanUrl = `${window.location.pathname}?v=${appVersion}`;
     if (replace) {
       window.history.replaceState({}, "", cleanUrl);
     } else {
@@ -21,9 +23,10 @@ export const updateUrlWithSession = (sessionId, replace = true) => {
 
   const url = new URL(window.location);
   url.searchParams.set("session", sessionId);
+  url.searchParams.set("v", appVersion);
 
   const newUrl = url.toString();
-  const state = { sessionId };
+  const state = { sessionId, v:appVersion };
 
   if (replace) {
     window.history.replaceState(state, "", newUrl);

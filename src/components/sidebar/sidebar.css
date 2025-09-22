@@ -1,7 +1,7 @@
 .sidebarouter {
   width: 300px; /* or whatever your default width is */
   transition: width 0.3s ease;
-  z-index: 1000;
+  /* z-index: 1000; */
   position: relative;
   min-height: 100vh;
 }
@@ -75,6 +75,10 @@
 .sidebarouter {
   width: 300px;
   transition: width 0.3s ease;
+}
+
+.overflow-hidden{
+  overflow: hidden;
 }
 
 .sidebarouter.collapsed {
@@ -309,7 +313,7 @@
   transform: translateY(-50%);
   border: none;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 100;
 }
 
 @media (max-width: 600px) {
@@ -320,7 +324,7 @@
     width: 80vw;
     max-width: 320px;
     height: 100vh;
-    z-index: 1000;
+    /* z-index: 1000; */
     transition: transform 0.3s ease;
     transform: translateX(0); /* default visible */
   }
@@ -334,7 +338,7 @@
     position: fixed;
     top: 16px;
     left: 10px;
-    z-index: 1100;
+    /* z-index: 1100; */
     background-color: transparent;
     border: none;
     cursor: pointer;

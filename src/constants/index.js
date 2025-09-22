@@ -1,16 +1,21 @@
+import { assets } from '../assets/assets';
+import RecentHistory from '../components/recent-history/RecentHistory';
+import Favourities from '../components/favourites/Favourities';
+import UploadDocument from '../components/Upload_Document/UploadDocument';
+
 export const API_CONFIG = {
-  BASE_URL: "https://localhost:8000",
+  BASE_URL: 'https://localhost:8000',
   ENDPOINTS: {
-    CHAT: "/chat",
-    CHAT_STREAM: "/chat/stream",
-    CHAT_HISTORY: "/chat/history",
-    CHAT_SEARCH: "/chat/search",
-    CHAT_STOP: "/chat/stop",
-    CHAT_DELETE: "/chat",
-    VOICE_INPUT: "/chat/voice-input",
-    CLIENTS: "/clients",
-    DOCUMENTS: "/documents",
-    UPLOAD: "/documents/upload",
+    CHAT: '/chat',
+    CHAT_STREAM: '/chat/stream',
+    CHAT_HISTORY: '/chat/history',
+    CHAT_SEARCH: '/chat/search',
+    CHAT_STOP: '/chat/stop',
+    CHAT_DELETE: '/chat',
+    VOICE_INPUT: '/chat/voice-input',
+    CLIENTS: '/clients',
+    DOCUMENTS: '/documents',
+    UPLOAD: '/documents/upload',
   },
   TIMEOUT: 30000,
   RETRY_ATTEMPTS: 3,
@@ -25,56 +30,88 @@ export const UI_CONFIG = {
   MAX_MESSAGE_LENGTH: 5000,
   MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
   SUPPORTED_FILE_TYPES: [
-    "application/pdf",
-    "text/plain",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    'application/pdf',
+    'text/plain',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ],
 };
 
 export const CHAT_CONFIG = {
   MAX_HISTORY_ITEMS: 100,
   SEARCH_LIMIT: 10,
-  SESSION_STORAGE_KEY: "chat_session_id",
+  SESSION_STORAGE_KEY: 'chat_session_id',
   CONVERSATION_REFRESH_DELAY: 100,
 };
 
 export const MESSAGE_TYPES = {
-  USER: "user",
-  ASSISTANT: "assistant",
-  SYSTEM: "system",
+  USER: 'user',
+  ASSISTANT: 'assistant',
+  SYSTEM: 'system',
 };
 
 export const UPLOAD_STATUS = {
   IDLE: null,
-  UPLOADING: "uploading",
-  UPLOADED: "uploaded",
-  ERROR: "error",
+  UPLOADING: 'uploading',
+  UPLOADED: 'uploaded',
+  ERROR: 'error',
 };
 
 export const LOADING_STATES = {
-  IDLE: "idle",
-  LOADING: "loading",
-  STREAMING: "streaming",
-  ERROR: "error",
-  SUCCESS: "success",
+  IDLE: 'idle',
+  LOADING: 'loading',
+  STREAMING: 'streaming',
+  ERROR: 'error',
+  SUCCESS: 'success',
 };
 
 export const ERROR_MESSAGES = {
   NETWORK_ERROR:
-    "Network connection failed. Please check your internet connection.",
-  SESSION_EXPIRED: "Your session has expired. Please refresh the page.",
-  UPLOAD_FAILED: "File upload failed. Please try again.",
+    'Network connection failed. Please check your internet connection.',
+  SESSION_EXPIRED: 'Your session has expired. Please refresh the page.',
+  UPLOAD_FAILED: 'File upload failed. Please try again.',
   INVALID_FILE_TYPE:
-    "Unsupported file type. Please upload PDF, DOC, or TXT files.",
-  FILE_TOO_LARGE: "File is too large. Maximum size allowed is 10MB.",
-  CONVERSATION_NOT_FOUND: "Conversation not found.",
-  UNEXPECTED_ERROR: "An unexpected error occurred. Please try again.",
+    'Unsupported file type. Please upload PDF, DOC, or TXT files.',
+  FILE_TOO_LARGE: 'File is too large. Maximum size allowed is 10MB.',
+  CONVERSATION_NOT_FOUND: 'Conversation not found.',
+  UNEXPECTED_ERROR: 'An unexpected error occurred. Please try again.',
 };
 
 export const SUCCESS_MESSAGES = {
   UPLOAD_SUCCESS:
-    "Documents uploaded successfully! You can now ask questions about the uploaded documents.",
-  CONVERSATION_SAVED: "Conversation saved successfully.",
-  MESSAGE_SENT: "Message sent successfully.",
+    'Documents uploaded successfully! You can now ask questions about the uploaded documents.',
+  CONVERSATION_SAVED: 'Conversation saved successfully.',
+  MESSAGE_SENT: 'Message sent successfully.',
 };
+
+export const NEW_APP_VERSION = 2;
+
+export const NAVBAR_ITEM_LIST = [
+  {
+    icon: assets.newchat,
+    navId: 'new_chat',
+    label: 'New chat',
+    isActive: false,
+  },
+  {
+    icon: assets.fav,
+    navId: 'favorities',
+    label: 'Favorites',
+    isActive: false,
+    children: Favourities,
+  },
+  {
+    icon: assets.schedule,
+    navId: 'recent_history',
+    label: 'Recent',
+    isActive: false,
+    children: RecentHistory,
+  },
+  // {
+  //   icon: assets.arrow,
+  //   navId: 'upload_documents',
+  //   label: 'Upload Documents',
+  //   isActive: false,
+  //   children: UploadDocument,
+  // }
+];

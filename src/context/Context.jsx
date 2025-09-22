@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, useCallback, createContext } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useRef, useState, useEffect, useCallback, createContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
   chat,
   getConversationHistory,
@@ -12,25 +12,28 @@ import {
   reorderFavorites,
   getSuggestions,
   getFAQs,
-} from "../services/api";
-const API_BASE_URL = "https://localhost:8000";
+} from '../services/api';
+const API_BASE_URL = 'https://localhost:8000';
 export const Context = createContext();
 
 const ContextProvider = (props) => {
   const abortRef = useRef(false);
-  const [input, setInput] = useState("");
-  const [recentPrompt, setRecentPrompt] = useState("");
+  const [input, setInput] = useState('');
+  const [recentPrompt, setRecentPrompt] = useState('');
   const [prevPrompts, setPrevPrompts] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [resultData, setResultData] = useState("");
+  const [resultData, setResultData] = useState('');
   const [currentSessionId, setCurrentSessionId] = useState(null);
 
   const [history, setHistory] = useState([]);
+  const [isChatHistoryLoading, setIsChatHistoryLoading] = useState(false);
+  const [hasChatHistoryError, setHasChatHistoryError] = useState(null);
+
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState(null);
@@ -45,16 +48,29 @@ const ContextProvider = (props) => {
 
   const [isStreaming, setIsStreaming] = useState(false);
 
-  const [lastPrompt, setLastPrompt] = useState("");
+  const [lastPrompt, setLastPrompt] = useState('');
   const [suggestions, setSuggestions] = useState([]); //this also added in 3/07
 
   const [faqList, setFaqList] = useState([]);
+  const [showSkeleton, setShowSkeleton] = useState(false);
+  // Modal
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
+  // Modal Functions
+  const handleOpenUploadModal = () => {
+    setIsUploadModalOpen(true);
+  };
+
+  const handleCloseUploadModal = () => {
+    setIsUploadModalOpen(false);
+  };
+
   const fetchFAQList = async () => {
     try {
       const faqs = await getFAQs();
       setFaqList(faqs);
     } catch (error) {
-      console.error("Error in fetchFAQList: ", error);
+      console.error('Error in fetchFAQList: ', error);
     }
   };
 
@@ -74,44 +90,55 @@ const ContextProvider = (props) => {
   }, []);
   // Update URL based on session ID
   const updateUrlForSession = (sessionId) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const appVersion = urlParams.get('v');
     let newUrl;
+    const appendVersion = appVersion ? `&v=${appVersion}` : '';
     if (sessionId) {
-      newUrl = `${window.location.pathname}?session=${sessionId}`;
+      newUrl = `${window.location.pathname}?session=${sessionId}${appendVersion}`;
     } else {
-      newUrl = window.location.pathname;
+      newUrl = `${window.location.pathname}?v=${appVersion}`;
     }
-    window.history.pushState({ sessionId }, "", newUrl);
+    window.history.pushState({ sessionId }, '', newUrl);
   };
 
   const fetchHistory = useCallback(async () => {
-    setHistoryLoading(true);
+    // remove setHistoryLoading from here and use setIsChatHistoryLoading for chat history
+    // setHistoryLoading(true);
+    setIsChatHistoryLoading(true);
     setHistoryError(null);
+    setHasChatHistoryError(null);
     try {
       const data = await getConversationHistory();
       setHistory(data);
     } catch (error) {
       setHistoryError(error.message);
+      setHasChatHistoryError(error.message);
     } finally {
+      // remove setHistoryLoading from here and use setIsChatHistoryLoading for chat history
       setHistoryLoading(false);
+      setIsChatHistoryLoading(false);
     }
   }, []);
 
   const fetchConversationDetails = useCallback(async (sessionId) => {
-    setHistoryLoading(true);
+    setHistoryLoading(false);
     setHistoryError(null);
+    const urlParams = new URLSearchParams(window.location.search);
+    const appVersion = urlParams.get('v');
     try {
       const data = await getConversationDetails(sessionId);
       setSelectedConversation(data);
       setCurrentSessionId(sessionId);
-      updateUrlForSession(sessionId);
-      setRecentPrompt(data.summary || "Previous conversation");
+      updateUrlForSession(sessionId, appVersion);
+      setRecentPrompt(data.summary || 'Previous conversation');
 
       // Include timestamp information in the message formatting
       const conversationTimestamp = data.timestamp;
-      console.log("🕒 Conversation timestamp received:", conversationTimestamp);
-      console.log("🕒 Parsed date:", new Date(conversationTimestamp));
+      console.log('🕒 Conversation timestamp received:', conversationTimestamp);
+      console.log('🕒 Parsed date:', new Date(conversationTimestamp));
       console.log(
-        "🕒 Local time:",
+        '🕒 Local time:',
         new Date(conversationTimestamp).toLocaleString()
       );
 
@@ -121,9 +148,10 @@ const ContextProvider = (props) => {
           const timestamp = conversationTimestamp;
           return `<strong>${msg.role}:</strong> ${msg.content} [${timestamp}]`;
         })
-        .join("<br/><br/>");
+        .join('<br/><br/>');
 
       setResultData(messages);
+      setShowSkeleton(false); 
       setShowResults(true);
     } catch (error) {
       setHistoryError(error.message);
@@ -133,16 +161,16 @@ const ContextProvider = (props) => {
   }, []);
 
   const newChat = useCallback(() => {
-    console.log("Starting new chat conversation");
+    console.log('Starting new chat conversation');
     setIsStreaming(false);
     setLoading(false);
     setShowResults(false);
 
     setSelectedConversation(null); // Clear selected conversation
     setCurrentSessionId(null); // Clear current session
-    setRecentPrompt("");
-    setResultData("");
-    setInput("");
+    setRecentPrompt('');
+    setResultData('');
+    setInput('');
 
     setUploadStatus(null);
     setUploadError(null);
@@ -151,7 +179,7 @@ const ContextProvider = (props) => {
     const newSessionId = uuidv4();
     setCurrentSessionId(newSessionId);
     updateUrlForSession(newSessionId);
-    console.log("New session created:", newSessionId);
+    console.log('New session created:', newSessionId);
 
     fetchFAQList();
   }, []);
@@ -165,19 +193,19 @@ const ContextProvider = (props) => {
 
     const prompt = promptArg ?? input;
     setLastPrompt(prompt);
-    setInput("");
+    setInput('');
     setIsStreaming(true);
 
     let charArray = [];
-    let existingConversation = "";
+    let existingConversation = '';
 
     try {
       // Use selectedConversation session_id if available, otherwise use currentSessionId
       const targetSessionId =
         selectedConversation?.session_id || currentSessionId;
-      console.log("🟡 Using session ID:", targetSessionId);
-      console.log("🟡 selectedConversation:", selectedConversation);
-      console.log("🟡 currentSessionId:", currentSessionId);
+      console.log('🟡 Using session ID:', targetSessionId);
+      console.log('🟡 selectedConversation:', selectedConversation);
+      console.log('🟡 currentSessionId:', currentSessionId);
 
       // Load existing conversation history if we have a session ID and we're continuing a conversation
       if (targetSessionId && selectedConversation) {
@@ -192,11 +220,11 @@ const ContextProvider = (props) => {
           if (conversationData && conversationData.messages) {
             existingConversation = conversationData.messages
               .map((msg) => `<strong>${msg.role}:</strong> ${msg.content}`)
-              .join("<br/><br/>");
+              .join('<br/><br/>');
             setSelectedConversation(conversationData);
           }
         } catch (error) {
-          console.log("Could not load existing conversation:", error);
+          console.log('Could not load existing conversation:', error);
         }
       }
 
@@ -214,14 +242,14 @@ const ContextProvider = (props) => {
       setResultData(conversationWithAnalysing);
 
       // Always send the message to backend for proper storage and session management
-      console.log("Sending message to backend:", prompt);
-      console.log(" Using session ID:", targetSessionId);
+      console.log('Sending message to backend:', prompt);
+      console.log(' Using session ID:', targetSessionId);
 
       // Send the original user prompt to backend - let backend handle document queries and enrichment
       const responseObj = await chat(prompt, targetSessionId);
 
       if (abortRef.current) {
-        console.log("User aborted before streaming began");
+        console.log('User aborted before streaming began');
         setLoading(false);
         return;
       }
@@ -249,20 +277,20 @@ const ContextProvider = (props) => {
         }
       }
 
-      const rawResponse = responseObj?.response ?? "";
+      const rawResponse = responseObj?.response ?? '';
       const formattedResponse = rawResponse
-        .split("**")
+        .split('**')
         .map((chunk, i) => (i % 2 === 1 ? `<b>${chunk}</b>` : chunk))
-        .join("")
-        .split("*")
-        .join("<br/>");
+        .join('')
+        .split('*')
+        .join('<br/>');
 
       // Build the complete conversation display without the "Analysing..." placeholder
       const fullConversationBase = `${conversationWithUserMessage}<br/><br/><strong>assistant:</strong> `;
 
       // Set the base conversation (everything except the streaming response)
       setResultData(fullConversationBase);
-      charArray = formattedResponse.split("");
+      charArray = formattedResponse.split('');
 
       setIsStreaming(true);
       setLoading(false);
@@ -291,7 +319,7 @@ const ContextProvider = (props) => {
 
       await fetchHistory();
     } catch (error) {
-      console.error("Error during chat:", error);
+      console.error('Error during chat:', error);
       setResultData((prev) =>
         prev.replace(
           '<div class="typing-indicator">Analysing...</div>',
@@ -312,20 +340,20 @@ const ContextProvider = (props) => {
     }
   };
 
-  const processVoiceInput = async (base64Audio, language = "en-IN") => {
+  const processVoiceInput = async (base64Audio, language = 'en-IN') => {
     try {
       const response = await fetch(`${API_BASE_URL}/chat/voice-input`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        credentials: "include",
+        credentials: 'include',
         body: JSON.stringify({
           audio_data: base64Audio,
           language,
         }),
       });
-      if (!response.ok) throw new Error("Voice input failed");
+      if (!response.ok) throw new Error('Voice input failed');
       return response.json();
       // const data=await response.json();
       // if (data.text){
@@ -333,7 +361,7 @@ const ContextProvider = (props) => {
       // 	onSent(data.text);
       // }
     } catch (error) {
-      console.error("Voice input error:", error.message);
+      console.error('Voice input error:', error.message);
       return null;
     }
   };
@@ -347,18 +375,18 @@ const ContextProvider = (props) => {
 
     try {
       await fetch(`${API_BASE_URL}/chat/stop`, {
-        method: "POST",
-        credentials: "include",
+        method: 'POST',
+        credentials: 'include',
       });
     } catch (error) {
-      console.error("Failed to stop response generation: ", error);
+      console.error('Failed to stop response generation: ', error);
     }
   };
 
   useEffect(() => {
     // Load initial session from URL if exists
     const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session");
+    const sessionId = params.get('session');
 
     if (sessionId) {
       fetchConversationDetails(sessionId);
@@ -366,7 +394,7 @@ const ContextProvider = (props) => {
       const newSessionId = uuidv4();
       setCurrentSessionId(newSessionId);
     }
-
+    setHistoryLoading(true);
     fetchHistory();
     fetchFAQList();
 
@@ -379,24 +407,24 @@ const ContextProvider = (props) => {
       }
     };
 
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [fetchConversationDetails, newChat]);
 
   const onUploadDocument = async (files) => {
-    setUploadStatus("uploading");
+    setUploadStatus('uploading');
     setUploadError(null);
 
     try {
       if (!files || files.length === 0) {
-        throw new Error("No files selected");
+        throw new Error('No files selected');
       }
 
       // Convert FileList to array if needed
       const filesArray = Array.isArray(files) ? files : Array.from(files);
 
       const result = await uploadDocuments(filesArray);
-      setUploadStatus("uploaded");
+      setUploadStatus('uploaded');
 
       // Optionally notify about successful upload
       const message = `Uploaded ${result.documents.length} file(s) successfully`;
@@ -406,7 +434,7 @@ const ContextProvider = (props) => {
       return result;
     } catch (error) {
       setUploadError(error.message);
-      setUploadStatus("error");
+      setUploadStatus('error');
       setResultData(`Upload failed: ${error.message}`);
       setShowResults(true);
       throw error;
@@ -417,19 +445,19 @@ const ContextProvider = (props) => {
   const deleteConversationById = useCallback(
     async (sessionId) => {
       if (!sessionId) {
-        console.warn("No session ID provided for deletion");
+        console.warn('No session ID provided for deletion');
         return false;
       }
 
-      setHistoryLoading(true);
+      // setHistoryLoading(true);
       setHistoryError(null);
 
       try {
-        console.log("🗑️ Deleting conversation:", sessionId);
+        console.log('🗑️ Deleting conversation:', sessionId);
         const result = await deleteConversation(sessionId);
 
-        if (result && result.status === "success") {
-          console.log("🗑️ Conversation deleted successfully");
+        if (result && result.status === 'success') {
+          console.log('🗑️ Conversation deleted successfully');
 
           // Remove from local history state
           setHistory((prev) =>
@@ -444,7 +472,7 @@ const ContextProvider = (props) => {
             setSelectedConversation(null);
             setCurrentSessionId(null);
             setShowResults(false);
-            setResultData("");
+            setResultData('');
           }
 
           // Remove from search results if present
@@ -454,10 +482,10 @@ const ContextProvider = (props) => {
 
           return true;
         } else {
-          throw new Error("Delete operation failed");
+          throw new Error('Delete operation failed');
         }
       } catch (error) {
-        console.error("Failed to delete conversation:", error);
+        console.error('Failed to delete conversation:', error);
         setHistoryError(error.message);
         return false;
       } finally {
@@ -472,7 +500,7 @@ const ContextProvider = (props) => {
       const res = await getSuggestions(sessionId);
       setSuggestions(res.suggestions || []);
     } catch (error) {
-      console.error("Failed to fetch suggestions:", error.message);
+      console.error('Failed to fetch suggestions:', error.message);
       setSuggestions([]);
     }
   };
@@ -494,16 +522,16 @@ const ContextProvider = (props) => {
   const toggleFavorite = useCallback(
     async (sessionId) => {
       if (!sessionId) {
-        console.warn("No session ID provided for favorite toggle");
+        console.warn('No session ID provided for favorite toggle');
         return false;
       }
 
       try {
-        console.log("⭐ Toggling favorite for conversation:", sessionId);
+        console.log('⭐ Toggling favorite for conversation:', sessionId);
         const result = await toggleFavoriteConversation(sessionId);
 
-        if (result && result.status === "success") {
-          console.log("⭐ Favorite toggled successfully");
+        if (result && result.status === 'success') {
+          console.log('⭐ Favorite toggled successfully');
 
           // Update the conversation in history
           setHistory((prev) =>
@@ -536,10 +564,10 @@ const ContextProvider = (props) => {
 
           return true;
         } else {
-          throw new Error("Favorite toggle operation failed");
+          throw new Error('Favorite toggle operation failed');
         }
       } catch (error) {
-        console.error("Failed to toggle favorite:", error);
+        console.error('Failed to toggle favorite:', error);
         setFavoritesError(error.message);
         return false;
       }
@@ -549,24 +577,24 @@ const ContextProvider = (props) => {
 
   const reorderFavoriteConversations = async (newOrder) => {
     if (!newOrder || newOrder.length === 0) {
-      console.warn("No new order provided for favorites reorder");
+      console.warn('No new order provided for favorites reorder');
       return false;
     }
 
     try {
-      console.log("⭐ Reordering favorites:", newOrder);
+      console.log('⭐ Reordering favorites:', newOrder);
       const result = await reorderFavorites(newOrder);
 
-      if (result && result.status === "success") {
-        console.log("⭐ Favorites reordered successfully");
+      if (result && result.status === 'success') {
+        console.log('⭐ Favorites reordered successfully');
         // Refresh favorites list to get updated order
         await fetchFavorites();
         return true;
       } else {
-        throw new Error("Favorites reorder operation failed");
+        throw new Error('Favorites reorder operation failed');
       }
     } catch (error) {
-      console.error("Failed to reorder favorites:", error);
+      console.error('Failed to reorder favorites:', error);
       setFavoritesError(error.message);
       return false;
     }
@@ -588,6 +616,8 @@ const ContextProvider = (props) => {
     resultData,
     newChat,
     history,
+    isChatHistoryLoading,
+    hasChatHistoryError,
     selectedConversation,
     fetchHistory,
     fetchConversationDetails,
@@ -614,6 +644,11 @@ const ContextProvider = (props) => {
     favoritesError,
     toggleFavorite,
     reorderFavoriteConversations,
+    handleOpenUploadModal,
+    handleCloseUploadModal,
+    isUploadModalOpen,
+    showSkeleton,
+    setShowSkeleton,
   };
 
   return (

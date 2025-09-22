@@ -4,26 +4,24 @@ import {
   useRef,
   useState,
   useLayoutEffect,
-} from "react";
-import { assets } from "../../assets/assets";
-import "./main.css";
-import { Context } from "../../context/Context.jsx";
-import Card from "../card/Card";
-import Button from "../button/Button.jsx";
-import Input from "../input/Input.jsx";
-import { FaBars, FaUser } from "react-icons/fa";
-import { formatTime } from "../../utils/dateUtils";
-import { scrollToBottom } from "../../utils/chatUtils";
-import { updateUrlWithSession } from "../../utils/urlUtils";
-import { Button as MUIButton, Menu, MenuItem } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import FrontHandIcon from "@mui/icons-material/FrontHand";
-import ChatIcon from "@mui/icons-material/Chat";
-import GTranslateIcon from "@mui/icons-material/GTranslate";
-import OutboundOutlinedIcon from "@mui/icons-material/OutboundOutlined";
-import ReactMarkdown from "react-markdown";
+} from 'react';
+import { assets } from '../../assets/assets';
+import './main.css';
+import { Context } from '../../context/Context.jsx';
+import Card from '../card/Card';
+import Button from '../button/Button.jsx';
+import Input from '../input/Input.jsx';
+import {
+  FaBars,
+  FaUser,
+  FaCommentAlt,
+  FaExternalLinkSquareAlt,
+} from 'react-icons/fa';
+import { formatTime } from '../../utils/dateUtils';
+import { scrollToBottom } from '../../utils/chatUtils';
+import { updateUrlWithSession } from '../../utils/urlUtils';
+import ReactMarkdown from 'react-markdown';
+import TextToSpeech from '../Text_To_Speech/TextToSpeech';
 
 const Main = ({ isSidebarVisible, toggleSidebar }) => {
   const chatContainerRef = useRef(null);
@@ -63,36 +61,7 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
   }, [currentSessionId]);
 
   // Use constants for card data
-  const cardData = [
-    {
-      title: "Our Capabilities",
-      desc: "A brief idea on what we do",
-      iconLeft: <FrontHandIcon />,
-      iconRight: <OutboundOutlinedIcon />,
-    },
-    {
-      title: "Available Languages",
-      desc: "What languages can we chat in?",
-      iconLeft: <GTranslateIcon />,
-      iconRight: <OutboundOutlinedIcon />,
-    },
-    {
-      title: "Clients We Work With",
-      desc: "Our list of elite clients across the globe",
-      iconLeft: <ChatIcon />,
-      iconRight: <OutboundOutlinedIcon />,
-    },
-    {
-      title: (
-        <>
-          Advisor <br /> Chat Guide
-        </>
-      ),
-      desc: "How to chat with an advisor?",
-      iconLeft: <AccountCircleIcon />,
-      iconRight: <OutboundOutlinedIcon />,
-    },
-  ];
+
   const handleCardClick = async (promptText) => {
     setInput(promptText);
 
@@ -131,9 +100,9 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
   };
 
   const truncateText = (text, maxWords = 12) => {
-    const words = text.split(" ");
+    const words = text.split(' ');
     return words.length > maxWords
-      ? words.slice(0, maxWords).join(" ") + "..."
+      ? words.slice(0, maxWords).join(' ') + '...'
       : text;
   };
 
@@ -142,23 +111,9 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
       <div className="main">
         <div className="nav">
           <div className="dropdown-container">
-            <MUIButton
-              onClick={handleDropdownClick}
-              endIcon={<ArrowDropDownIcon />}
-              className="dropdown-btn"
-              style={{ textTransform: "lowercase" }}
-            >
-              bodh.ai v1.0
-            </MUIButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleDropdownClose}
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-            >
-              <MenuItem onClick={handleDropdownClose}>bodh.ai v1.0</MenuItem>
-            </Menu>
+            <select onClick={handleDropdownClose}>
+              <option> bodh.ai v1.0</option>
+            </select>
           </div>
         </div>
         <div className="main-container">
@@ -178,11 +133,11 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
               <div
                 className="cards-container"
                 style={{
-                  display: "flex",
-                  gap: "30px",
-                  justifyContent: "center",
-                  maxWidth: "900px",
-                  margin: "0 auto",
+                  display: 'flex',
+                  gap: '30px',
+                  justifyContent: 'center',
+                  maxWidth: '900px',
+                  margin: '0 auto',
                 }}
               >
                 {faqList.length > 0 ? (
@@ -190,8 +145,8 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                     <Card
                       key={index}
                       size="medium"
-                      iconLeft={<ChatIcon />}
-                      iconRight={<OutboundOutlinedIcon />}
+                      iconLeft={<FaCommentAlt size={'1.5rem'} />}
+                      iconRight={<FaExternalLinkSquareAlt size={'1.5rem'} />}
                       onClick={() => handleCardClick(question)}
                     >
                       <div>
@@ -224,10 +179,10 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                             <span className="message-time">{formatTime()}</span>
                           </div>
                           <div className="message-text">
-                            {uploadStatus === "uploading" &&
-                              "Uploading documents..."}
-                            {uploadStatus === "uploaded" &&
-                              "Documents uploaded successfully! You can now ask questions about the uploaded documents."}
+                            {uploadStatus === 'uploading' &&
+                              'Uploading documents...'}
+                            {uploadStatus === 'uploaded' &&
+                              'Documents uploaded successfully! You can now ask questions about the uploaded documents.'}
                             {uploadError && `Upload error: ${uploadError}`}
                           </div>
                         </div>
@@ -242,16 +197,16 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                     {(() => {
                       // Parse the conversation data more intelligently
                       const sections = resultData
-                        .split("<br/><br/>")
+                        .split('<br/><br/>')
                         .filter((section) => section.trim());
                       const messages = [];
 
                       sections.forEach((section, index) => {
                         const cleanSection = section.trim();
 
-                        if (cleanSection.includes("<strong>user:</strong>")) {
+                        if (cleanSection.includes('<strong>user:</strong>')) {
                           const userMessage = cleanSection
-                            .replace("<strong>user:</strong>", "")
+                            .replace('<strong>user:</strong>', '')
                             .trim();
                           // Try to extract timestamp from the message if available
                           const timestampMatch = userMessage.match(
@@ -261,20 +216,20 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                             ? timestampMatch[1]
                             : null;
                           const content = timestamp
-                            ? userMessage.replace(/\[.*?\]/, "").trim()
+                            ? userMessage.replace(/\[.*?\]/, '').trim()
                             : userMessage;
 
                           messages.push({
-                            type: "user",
+                            type: 'user',
                             content: content,
                             timestamp: timestamp,
                             index: `user-${index}`,
                           });
                         } else if (
-                          cleanSection.includes("<strong>assistant:</strong>")
+                          cleanSection.includes('<strong>assistant:</strong>')
                         ) {
                           const assistantMessage = cleanSection
-                            .replace("<strong>assistant:</strong>", "")
+                            .replace('<strong>assistant:</strong>', '')
                             .trim();
                           // Try to extract timestamp from the message if available
                           const timestampMatch = assistantMessage.match(
@@ -284,22 +239,22 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                             ? timestampMatch[1]
                             : null;
                           const content = timestamp
-                            ? assistantMessage.replace(/\[.*?\]/, "").trim()
+                            ? assistantMessage.replace(/\[.*?\]/, '').trim()
                             : assistantMessage;
 
                           messages.push({
-                            type: "assistant",
+                            type: 'assistant',
                             content: content,
                             timestamp: timestamp,
                             index: `assistant-${index}`,
                           });
                         } else if (
                           cleanSection &&
-                          !cleanSection.includes("<strong>")
+                          !cleanSection.includes('<strong>')
                         ) {
                           // Handle content that might not have proper tags
                           messages.push({
-                            type: "assistant",
+                            type: 'assistant',
                             content: cleanSection,
                             timestamp: null,
                             index: `content-${index}`,
@@ -308,11 +263,11 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                       });
 
                       const normalizeMessage = (raw) => {
-                        return raw.replace(/<br\s*\/?>/gi, "\n");
+                        return raw.replace(/<br\s*\/?>/gi, '\n');
                       };
 
                       return messages.map((message, idx) => {
-                        if (message.type === "user") {
+                        if (message.type === 'user') {
                           return (
                             <div
                               key={message.index}
@@ -334,99 +289,100 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                     {loading && idx === messages.length - 1 ? (
                                       Analysing
                                     ) : message.content.includes(
-                                        "typing-indicator"
-                                      ) ? null : (
-                                      <ReactMarkdown
-                                        components={{
-                                          p: ({ node, ...props }) => (
-                                            <p
-                                              style={{
-                                                marginBottom: "0.8em",
-                                                lineHeight: "1.6",
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                          strong: ({ node, ...props }) => (
-                                            <strong
-                                              style={{
-                                                color: "#000",
-                                                fontWeight: 600,
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                          li: ({ node, ...props }) => (
-                                            <li
-                                              style={{
-                                                marginBottom: "0.4em",
-                                                marginLeft: "1.2em",
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                          ul: ({ node, ...props }) => (
-                                            <ul
-                                              style={{
-                                                paddingLeft: "1.5em",
-                                                marginBottom: "1em",
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                          table: ({ node, ...props }) => (
-                                            <table
-                                              style={{
-                                                width: "100%",
-                                                borderCollapse: "collapse",
-                                                marginBottom: "1em",
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                          thead: ({ node, ...props }) => (
-                                            <thead
-                                              style={{
-                                                backgroundColor: "#f0f0f0",
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                          tbody: ({ node, ...props }) => (
-                                            <tbody {...props} />
-                                          ),
-                                          tr: ({ node, ...props }) => (
-                                            <tr
-                                              style={{
-                                                borderBottom: "1px solid #ddd",
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                          th: ({ node, ...props }) => (
-                                            <th
-                                              style={{
-                                                textAlign: "left",
-                                                padding: "8px",
-                                                fontWeight: "bold",
-                                                border: "1px solid #ccc",
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                          td: ({ node, ...props }) => (
-                                            <td
-                                              style={{
-                                                padding: "8px",
-                                                border: "1px solid #ccc",
-                                              }}
-                                              {...props}
-                                            />
-                                          ),
-                                        }}
-                                      >
-                                        {normalizeMessage(message.content)}
-                                      </ReactMarkdown>
+                                      'typing-indicator'
+                                    ) ? null : (
+                                      // <ReactMarkdown
+                                      //   components={{
+                                      //     p: ({ node, ...props }) => (
+                                      //       <p
+                                      //         style={{
+                                      //           marginBottom: "0.8em",
+                                      //           lineHeight: "1.6",
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //     strong: ({ node, ...props }) => (
+                                      //       <strong
+                                      //         style={{
+                                      //           color: "#000",
+                                      //           fontWeight: 600,
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //     li: ({ node, ...props }) => (
+                                      //       <li
+                                      //         style={{
+                                      //           marginBottom: "0.4em",
+                                      //           marginLeft: "1.2em",
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //     ul: ({ node, ...props }) => (
+                                      //       <ul
+                                      //         style={{
+                                      //           paddingLeft: "1.5em",
+                                      //           marginBottom: "1em",
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //     table: ({ node, ...props }) => (
+                                      //       <table
+                                      //         style={{
+                                      //           width: "100%",
+                                      //           borderCollapse: "collapse",
+                                      //           marginBottom: "1em",
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //     thead: ({ node, ...props }) => (
+                                      //       <thead
+                                      //         style={{
+                                      //           backgroundColor: "#f0f0f0",
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //     tbody: ({ node, ...props }) => (
+                                      //       <tbody {...props} />
+                                      //     ),
+                                      //     tr: ({ node, ...props }) => (
+                                      //       <tr
+                                      //         style={{
+                                      //           borderBottom: "1px solid #ddd",
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //     th: ({ node, ...props }) => (
+                                      //       <th
+                                      //         style={{
+                                      //           textAlign: "left",
+                                      //           padding: "8px",
+                                      //           fontWeight: "bold",
+                                      //           border: "1px solid #ccc",
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //     td: ({ node, ...props }) => (
+                                      //       <td
+                                      //         style={{
+                                      //           padding: "8px",
+                                      //           border: "1px solid #ccc",
+                                      //         }}
+                                      //         {...props}
+                                      //       />
+                                      //     ),
+                                      //   }}
+                                      // >
+                                      //   {normalizeMessage(message.content)}
+                                      // </ReactMarkdown>
+                                      <>{normalizeMessage(message.content)}</>
                                     )}
                                   </div>
                                 </div>
@@ -460,8 +416,8 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         p: ({ node, ...props }) => (
                                           <p
                                             style={{
-                                              marginBottom: "0.8em",
-                                              lineHeight: "1.6",
+                                              marginBottom: '0.8em',
+                                              lineHeight: '1.6',
                                             }}
                                             {...props}
                                           />
@@ -469,7 +425,7 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         strong: ({ node, ...props }) => (
                                           <strong
                                             style={{
-                                              color: "#000",
+                                              color: '#000',
                                               fontWeight: 600,
                                             }}
                                             {...props}
@@ -478,8 +434,8 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         li: ({ node, ...props }) => (
                                           <li
                                             style={{
-                                              marginBottom: "0.4em",
-                                              marginLeft: "1.2em",
+                                              marginBottom: '0.4em',
+                                              marginLeft: '1.2em',
                                             }}
                                             {...props}
                                           />
@@ -487,8 +443,8 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         ul: ({ node, ...props }) => (
                                           <ul
                                             style={{
-                                              paddingLeft: "1.5em",
-                                              marginBottom: "1em",
+                                              paddingLeft: '1.5em',
+                                              marginBottom: '1em',
                                             }}
                                             {...props}
                                           />
@@ -496,9 +452,9 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         table: ({ node, ...props }) => (
                                           <table
                                             style={{
-                                              width: "100%",
-                                              borderCollapse: "collapse",
-                                              marginBottom: "1em",
+                                              width: '100%',
+                                              borderCollapse: 'collapse',
+                                              marginBottom: '1em',
                                             }}
                                             {...props}
                                           />
@@ -506,7 +462,7 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         thead: ({ node, ...props }) => (
                                           <thead
                                             style={{
-                                              backgroundColor: "#f0f0f0",
+                                              backgroundColor: '#f0f0f0',
                                             }}
                                             {...props}
                                           />
@@ -517,7 +473,7 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         tr: ({ node, ...props }) => (
                                           <tr
                                             style={{
-                                              borderBottom: "1px solid #ddd",
+                                              borderBottom: '1px solid #ddd',
                                             }}
                                             {...props}
                                           />
@@ -525,10 +481,10 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         th: ({ node, ...props }) => (
                                           <th
                                             style={{
-                                              textAlign: "left",
-                                              padding: "8px",
-                                              fontWeight: "bold",
-                                              border: "1px solid #ccc",
+                                              textAlign: 'left',
+                                              padding: '8px',
+                                              fontWeight: 'bold',
+                                              border: '1px solid #ccc',
                                             }}
                                             {...props}
                                           />
@@ -536,8 +492,8 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                         td: ({ node, ...props }) => (
                                           <td
                                             style={{
-                                              padding: "8px",
-                                              border: "1px solid #ccc",
+                                              padding: '8px',
+                                              border: '1px solid #ccc',
                                             }}
                                             {...props}
                                           />
@@ -565,6 +521,9 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
                                           ))}
                                         </div>
                                       )}
+                                    <div>
+                                      {!loading && <TextToSpeech inputText={message.content} />}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -585,8 +544,8 @@ const Main = ({ isSidebarVisible, toggleSidebar }) => {
               onChange={(e) => setInput(e.target.value)}
               onSend={() => handleSendMessage()}
               disabled={false}
-              onFocus={() => console.log("Input focused")}
-              onBlur={() => console.log("Input blurred")}
+              onFocus={() => console.log('Input focused')}
+              onBlur={() => console.log('Input blurred')}
               onStop={stopResponse}
               onUploadDocument={onUploadDocument}
               uploadStatus={uploadStatus}

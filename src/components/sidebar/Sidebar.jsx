@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
-import { assets } from "../../assets/assets";
-import { useContext, useCallback } from "react";
-import { Context } from "../../context/Context";
+import { useState, useRef } from 'react';
+import { assets } from '../../assets/assets';
+import { useContext, useCallback } from 'react';
+import { Context } from '../../context/Context';
 import {
   FaPlus,
   FaSearch,
@@ -9,12 +9,12 @@ import {
   FaCog,
   FaTrash,
   FaGreaterThan,
-} from "react-icons/fa";
-import { MdAttachment } from "react-icons/md";
-import { debounce } from "../../utils/chatUtils";
-import { CHAT_CONFIG, UI_CONFIG } from "../../constants";
-import DateAccordion from "./collapseHistory";
-import "./sidebar.css";
+} from 'react-icons/fa';
+import { MdAttachment } from 'react-icons/md';
+import { debounce } from '../../utils/chatUtils';
+import { CHAT_CONFIG, UI_CONFIG } from '../../constants';
+import DateAccordion from './collapseHistory';
+import './sidebar.css';
 
 const Sidebar = (isVisible) => {
   const {
@@ -42,20 +42,20 @@ const Sidebar = (isVisible) => {
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) {
-        console.warn("Invalid date string:", dateString);
-        return "";
+        console.warn('Invalid date string:', dateString);
+        return '';
       }
 
-      return date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       });
     } catch (error) {
-      console.warn("Date parsing error:", error);
-      return "";
+      console.warn('Date parsing error:', error);
+      return '';
     }
   };
 
@@ -100,7 +100,7 @@ const Sidebar = (isVisible) => {
       event.stopPropagation();
 
       const confirmed = window.confirm(
-        "Are you sure you want to delete this conversation? This action cannot be undone."
+        'Are you sure you want to delete this conversation? This action cannot be undone.'
       );
 
       if (!confirmed) return;
@@ -108,12 +108,12 @@ const Sidebar = (isVisible) => {
       try {
         const success = await deleteConversationById(sessionId);
         if (success) {
-          console.log("✅ Conversation deleted successfully");
+          console.log('✅ Conversation deleted successfully');
           await fetchHistory();
         }
       } catch (error) {
-        console.error("❌ Failed to delete conversation:", error);
-        alert("Failed to delete conversation. Please try again.");
+        console.error('❌ Failed to delete conversation:', error);
+        alert('Failed to delete conversation. Please try again.');
       }
     },
     [deleteConversationById, fetchHistory]
@@ -129,7 +129,7 @@ const Sidebar = (isVisible) => {
           onClick={() => setIsCollapsed(false)}
         />
       )}
-      <div className={`sidebarouter ${isCollapsed ? "collapsed" : ""}`}>
+      <div className={`sidebarouter ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar">
           <img
             src={assets.sidebar_colaspe}
@@ -184,7 +184,7 @@ const Sidebar = (isVisible) => {
                 type="file"
                 multiple
                 ref={fileInputRef}
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
                 onChange={handleFileChange}
               />
               <p>Upload Document</p>
