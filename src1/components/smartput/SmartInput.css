@@ -1,0 +1,41 @@
+.smart-input {
+ display: flex;
+ align-items: center;
+ padding: 10px;
+ border: 1px solid #ccc;
+ border-radius: 6px;
+ gap: 6px;
+ max-width: 400px;
+ cursor: pointer;
+ background-color: white;
+}
+.smart-input input {
+ flex: 1;
+ border: none;
+ outline: none;
+ background: transparent;
+ font-size: 16px;
+}
+.input-icon {
+ font-size: 18px;
+ color: #555;
+}
+.modal-input-wrapper {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+.modal-input {
+ flex: 1;
+ padding: 10px;
+ font-size: 18px;
+ border: 1px solid #ccc;
+ border-radius: 6px;
+}
+.voice-btn {
+ background: none;
+ border: none;
+ font-size: 20px;
+ color: #007bff;
+ cursor: pointer;
+}
