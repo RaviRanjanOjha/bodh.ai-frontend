@@ -1,0 +1,101 @@
+.card {
+ border: 1px solid #ddd;
+ border-radius: 8px;
+ background-color: #fff;
+ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+ margin: 1rem auto;
+ overflow: hidden;
+ transition: box-shadow 0.3s ease;
+ border-radius: 15px;
+}
+.card:hover {
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.card-small {
+ width: 250px;
+ padding: 10px;
+ font-size: 24px;
+}
+.card-medium {
+ width: 220px;
+ padding: 15px;
+}
+.card-large {
+ width: 600px;
+ padding: 20px;
+}
+.card-header,
+.card-footer {
+ padding: 10px;
+ background-color: #f9f9f9;
+ font-weight: bold;
+ border-bottom: 1px solid #e0e0e0;
+}
+.card-footer {
+ border-top: 1px solid #e0e0e0;
+ border-bottom: none;
+}
+.card-content {
+ padding: 10px 0;
+}
+ 
+.card-small strong {
+  font-size: 20px;
+  letter-spacing: -2%;
+}
+.card-small p {
+  font-size: 14px;
+  margin-top: 721px;
+ 
+}
+ 
+.card-medium strong {
+text-transform: capitalize;
+  margin-top: 2px;
+  font-size: 16px;
+  letter-spacing: -2%;
+ 
+}
+.card-medium p {
+  margin-top: 8px;
+  font-size: 14px;
+  letter-spacing: 0%;
+ 
+}
+ 
+.card-large strong {
+  font-size: 28px;
+}
+.card-large p {
+  font-size: 18px;
+}
+ 
+.card-header{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border: None;
+    padding: 0;
+}
+.box-arrow svg{color: #E91B63;}
+.browser-icon{
+    width:24px;
+    padding: 0px;
+    height:24px;
+}
+ 
+.arrow-icon{
+    padding:0px;
+}
+ 
+ 
+.image-button {
+    background: transparent; /* Makes button background invisible */
+    border: none; /* Removes default border */
+    cursor: pointer;
+}
+ 
+.image-button img {
+    display: block;
+}
