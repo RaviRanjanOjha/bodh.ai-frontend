@@ -27,11 +27,15 @@ const PromptContent = ({
 
     let imageLink = null;
     let excelLink = null;
-    if (message.content && message.content.includes('|')) {
-        const [first, second] = message.content.split('|');
-        if (isImageUrl(first.trim()) && isExcelUrl(second.trim())) {
-            imageLink = first.trim();
-            excelLink = second.trim();
+    if (message.content && typeof message.content === 'string') {
+        if (message.content.includes('|')) {
+            const [first, second] = message.content.split('|').map(s => s.trim());
+            if (isImageUrl(first)) imageLink = first;
+            if (isExcelUrl(second)) excelLink = second;
+        } else {
+            const val = message.content.trim();
+            if (isImageUrl(val)) imageLink = val;
+            else if (isExcelUrl(val)) excelLink = val;
         }
     }
 
@@ -50,18 +54,15 @@ const PromptContent = ({
                             {imageLink && excelLink ? (
                                 <div className="mb-2 flex flex-col gap-1 ">
                                     <div
-                                        className={`relative w-full overflow-auto`}
+                                        className="relative w-full overflow-auto"
                                         style={{ maxHeight: isZoomed ? '340px' : '230px', minHeight: isZoomed ? '160px' : 'auto' }}
                                     >
                                         <img
                                             src={imageLink}
                                             alt="Generated Image"
-                                            className={`transition-transform duration-300 ${isZoomed ? 'scale-[3] cursor-zoom-out' : 'scale-100 cursor-zoom-in'} origin-top-left block`}
+                                            className={`transition-transform duration-300 ${isZoomed ? 'scale-[2.5] cursor-zoom-out' : 'scale-100 cursor-zoom-in'} origin-top-left block`}
                                             onClick={() => setIsZoomed((prev) => !prev)}
-                                            style={{
-                                                display: "block",
-                                                margin: "0",
-                                            }}
+                                            style={{ display: "block", margin: "0" }}
                                         />
                                     </div>
                                     <div style={{ marginTop: 8 }}>
@@ -76,12 +77,38 @@ const PromptContent = ({
                                         </a>
                                     </div>
                                 </div>
+                            ) : imageLink ? (
+                                <div className="mb-2 flex flex-col gap-1">
+                                    <div
+                                        className="relative w-full overflow-auto"
+                                        style={{ maxHeight: isZoomed ? '340px' : '230px', minHeight: isZoomed ? '160px' : 'fit-content' }}
+                                    >
+                                        <img
+                                            src={imageLink}
+                                            alt="Generated Image"
+                                            className={`transition-transform duration-300 ${isZoomed ? 'scale-[1.5] cursor-zoom-out' : 'scale-100 cursor-zoom-in'} origin-top-left block`}
+                                            onClick={() => setIsZoomed((prev) => !prev)}
+                                            style={{ display: "block", margin: "0" }}
+                                        />
+                                    </div>
+                                </div>
+                            ) : excelLink ? (
+                                <div style={{ marginTop: 8 }}>
+                                    <a
+                                        href={excelLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="rounded-full shadow-md p-2 text-gray-900 text-sm bg-stone-300 hover:cursor-pointer hover:bg-stone-400"
+                                        download
+                                    >
+                                        Download As Excel
+                                    </a>
+                                </div>
                             ) : (
                                 <ReactMarkdown>
                                     {normalizeMessage(message.content)}
                                 </ReactMarkdown>
-                            )
-                            }
+                            )}
                         </div>
                     )}
                 </div>
