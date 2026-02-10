@@ -30,7 +30,7 @@ const TextToSpeech = ({ inputText }) => {
                 src={assets.text_to_speech}
                 alt="text to speech"
                 onClick={handleToggleSpeak}
-                className={"cursor-pointer h-6"} />
+                className={"cursor-pointer h-4 sm:h-6"} />
         </div>
     );
 };

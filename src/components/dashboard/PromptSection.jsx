@@ -1,9 +1,8 @@
-import PromptHeader from './PromptHeader';
-import PromptContent from './PromptContent';
-import PromptControls from './PromptControls';
+import PromptHeader from "./PromptHeader";
+import PromptContent from "./PromptContent";
+import PromptControls from "./PromptControls";
 
 const PromptSection = ({ loading, resultData }) => {
-
   const normalizeMessage = (raw) => {
     return raw.replace(/<br\s*\/?>/gi, "\n");
   };
@@ -24,7 +23,7 @@ const PromptSection = ({ loading, resultData }) => {
           .replace("<strong>user:</strong>", "")
           .trim();
         const timestampMatch = userMessage.match(
-          /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*?)\]/
+          /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*?)\]/,
         );
         const timestamp = timestampMatch ? timestampMatch[1] : null;
         const content = timestamp
@@ -42,7 +41,7 @@ const PromptSection = ({ loading, resultData }) => {
           .replace("<strong>assistant:</strong>", "")
           .trim();
         const timestampMatch = assistantMessage.match(
-          /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*?)\]/
+          /\[(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*?)\]/,
         );
         const timestamp = timestampMatch ? timestampMatch[1] : null;
         const content = timestamp
@@ -74,8 +73,13 @@ const PromptSection = ({ loading, resultData }) => {
     <>
       <div className="message-container overflow-y-auto h-[90vh] px-4 no-scrollbar">
         {messages.map((message, idx) => (
-          <div className="flex flex-col justify-between mb-4" key={message.index}>
-            <div className="top-content flex flex-col gap-5">
+          <div
+            className={`flex mb-4 ${message.type === "user" ? "justify-start" : "justify-end"}`}
+            key={message.index}
+          >
+            <div
+              className={`top-content flex flex-col gap-5 max-w-[90%] ${message.type === "user" ? "items-start " : "items-end"}`}
+            >
               <PromptHeader
                 message={message}
                 normalizeMessage={(e) => normalizeMessage(e)}
@@ -89,16 +93,16 @@ const PromptSection = ({ loading, resultData }) => {
                 index={idx}
                 messages={messages}
               />
-              {message.type === "assistant" && message.content != "Analysing.." && (
-                <PromptControls message={message} />
-              )}
-
+              {message.type === "assistant" &&
+                message.content != "Analysing.." && (
+                  <PromptControls message={message} />
+                )}
             </div>
           </div>
         ))}
       </div>
     </>
-  )
+  );
 };
 
 export default PromptSection;

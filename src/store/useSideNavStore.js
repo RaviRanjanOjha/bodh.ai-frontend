@@ -5,6 +5,9 @@ const useSideNavStore = create((set) => ({
   setToggleNavigation: () => {
     set((state) => ({ isNavigationCollapsed: !state.isNavigationCollapsed }));
   },
+  setNavigation: (value) => {
+    set((state) => ({ ...state, isNavigationCollapsed: value }));
+  },
 }));
 
 export default useSideNavStore;

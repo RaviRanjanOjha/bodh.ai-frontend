@@ -1,0 +1,19 @@
+.bg-blue-gray-50 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(236 239 241 / var(--tw-bg-opacity));
+}
+
+.border-blue-gray-100 {
+    --tw-border-opacity: 1;
+    border-color: rgb(207 216 220 / var(--tw-border-opacity));
+}
+
+.border-blue-gray-50 {
+    --tw-border-opacity: 1;
+    border-color: rgb(236 239 241 / var(--tw-border-opacity));
+}
+
+.text-blue-gray-900 {
+    --tw-text-opacity: 1;
+    color: rgb(38 50 56 / var(--tw-text-opacity));
+}

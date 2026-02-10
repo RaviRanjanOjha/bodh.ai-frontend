@@ -1,20 +1,19 @@
-import { assets } from '../../assets/assets';
+import { assets } from "../../assets/assets";
 
 const PromptHeader = ({ message, normalizeMessage, messageType }) => {
-  if (messageType === 'user') {
-
+  if (messageType === "user") {
     return (
-      <div className="flex flex-row">
-        <p className="w-11 text-[#707070]">
-          <img src={assets.userIcon} alt="" className='h-[20px]' />
-        </p>
-        <p className="text-[#2e2e2e] font-semibold">
+      <div className="flex items-start justify-start gap-2 w-full">
+        
+        <img src={assets.userIcon} alt="" className="h-[14px] sm:h-[20px] flex-shrink-0" />
+        <div className="max-w-[70%]">
+        <p className="break-words text-[#2e2e2e] font-semibold text-left">
           {normalizeMessage(message.content)}
         </p>
+        </div>
       </div>
-    )
-  }
-  else return (<></>);
+    );
+  } else return <></>;
 };
 
 export default PromptHeader;

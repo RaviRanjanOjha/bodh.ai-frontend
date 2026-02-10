@@ -39,6 +39,8 @@ import prompt_heading from "./prompt_heading.svg";
 import light_mode from "./light_mode.svg";
 import dark_mode from "./dark_mode.svg";
 import userIcon from "./userIcon.svg"
+import download_icon from "./download-icon.svg"
+import techm_logo from "./techm-logo-new.png"
 
 export const assets = {
   //<<< anirudh changes
@@ -47,6 +49,8 @@ export const assets = {
   fav,
   bodhAilogo,
   newchat,
+  techm_logo,
+
   // anirudh changes >>>>>
 
   // <<<aviraj changes
@@ -65,6 +69,7 @@ export const assets = {
   light_mode,
   dark_mode,
   userIcon,
+  download_icon,
   // aviraj changes>>>
 
   chat,

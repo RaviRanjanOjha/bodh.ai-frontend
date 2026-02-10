@@ -42,48 +42,108 @@ const InputSection = ({
 
     return (
         <div
-            className={`w-[55%] border border-[rgba(0,0,0,0.20)] rounded-[28px] flex justify-between items-center prompt-enter transition-all duration-300 ease-out ${inputFocus ? 'h-36 pr-5 pl-3' : 'h-16 pr-3 pl-2'}`}
+            className={`w-[95%] max-w-3xl overflow-hidden border border-[rgba(0,0,0,0.20)] rounded-[28px] transition-all duration-300 ease-out 
+                ${inputFocus
+                    ? 'flex flex-col items-stretch h-24 sm:h-36 px-3 sm:px-5 py-2 sm:py-3'
+                    : 'flex flex-row items-center justify-between h-12 sm:h-16 pr-1.5 sm:pr-3 pl-1 sm:pl-2'
+                }`}
         >
-            <div className="flex items-center gap-3 w-full h-full">
-                <img src={assets.ai_search_icon} alt="search icon" className='h-[36px]' />
-                <textarea
-                    type="text"
-                    rows={1}
-                    className="border-none text-gray-900 text-sm rounded-lg block w-full h-auto p-2.5 focus:outline-none resize-none overflow-auto no-scrollbar max-h-[90%]"
-                    placeholder="What can we explore together today?"
-                    value={value}
-                    onChange={onChange}
-                    disabled={disabled}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter' && value.trim() !== '') {
-                            e.preventDefault();
-                            onSend();
-                        }
-                    }}
-                />
-                <img
-                    src={assets.mic}
-                    alt="mic icon"
-                    onClick={handleVoiceInput}
-                    className="cursor-pointer p-2 bg-transparent text-gray-600 rounded-full hover:bg-gray-200 arrow-up h-[40px]" />
+            {inputFocus ? (
+                <>
+                    <div className="w-full h-full mb-1">
+                        <textarea
+                            rows={1}
+                            className="border-none text-gray-900 text-xs sm:text-sm rounded-lg block w-full h-full px-2.5 
+                                focus:outline-none resize-none overflow-auto no-scrollbar"
+                            placeholder="What can we explore together today?"
+                            value={value}
+                            onChange={onChange}
+                            disabled={disabled}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && value.trim() !== '') {
+                                    e.preventDefault();
+                                    onSend();
+                                }
+                            }}
+                        />
+                    </div>
 
-                {value.trim() !== '' ? (
-                    <img
-                        src={assets.arrow_forw}
-                        alt="arrow icon"
-                        onClick={isStreaming ? onStop : onSend}
-                        className="cursor-pointer p-2 bg-transparent text-gray-600 border border-[#DFD0E9] rounded-full hover:bg-gray-200 arrow-up h-[40px]"
+                    <div className="flex flex-row justify-between items-center">
+                        <div className="flex items-end gap-2 sm:gap-3">
+                            <img src={assets.ai_search_icon} alt="search icon" className='h-7 sm:h-10' />
+                        </div>
+
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <img
+                                src={assets.mic}
+                                alt="mic icon"
+                                onClick={handleVoiceInput}
+                                className="cursor-pointer p-2 bg-transparent text-gray-600 rounded-full hover:bg-gray-200 h-9 sm:h-12"
+                            />
+
+                            {value.trim() !== '' ? (
+                                <img
+                                    src={assets.arrow_forw}
+                                    alt="arrow icon"
+                                    onClick={isStreaming ? onStop : onSend}
+                                    className="cursor-pointer p-2 bg-transparent text-gray-600 border border-[#DFD0E9] rounded-full hover:bg-gray-200 h-9 sm:h-12"
+                                />
+                            ) : (
+                                <img
+                                    src={assets.arrow_forw}
+                                    alt="arrow icon"
+                                    className="p-2 bg-transparent text-gray-400 border border-[#DFD0E9] rounded-full opacity-50 cursor-not-allowed h-9 sm:h-12"
+                                />
+                            )}
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <div className="flex items-center gap-2 sm:gap-3 w-full h-full">
+                    <img src={assets.ai_search_icon} alt="search icon" className='h-7 sm:h-10' />
+                    <textarea
+                        type="text"
+                        rows={1}
+                        className="border-none text-gray-900 text-xs sm:text-sm rounded-lg block w-full h-auto p-2.5 
+                            focus:outline-none resize-none overflow-auto no-scrollbar"
+                        placeholder="What can we explore together today?"
+                        value={value}
+                        onChange={onChange}
+                        disabled={disabled}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && value.trim() !== '') {
+                                e.preventDefault();
+                                onSend();
+                            }
+                        }}
                     />
-                ) : (
                     <img
-                        src={assets.arrow_forw}
-                        alt="arrow icon"
-                        className="p-2 bg-transparent text-gray-400 border border-[#DFD0E9] rounded-full opacity-50 cursor-not-allowed h-[40px]"
+                        src={assets.mic}
+                        alt="mic icon"
+                        onClick={handleVoiceInput}
+                        className="cursor-pointer p-2 bg-transparent text-gray-600 rounded-full hover:bg-gray-200 h-9 sm:h-12"
                     />
-                )}
-            </div>
+
+                    {value.trim() !== '' ? (
+                        <img
+                            src={assets.arrow_forw}
+                            alt="arrow icon"
+                            onClick={isStreaming ? onStop : onSend}
+                            className="cursor-pointer p-2 bg-transparent text-gray-600 border border-[#DFD0E9] rounded-full hover:bg-gray-200 h-9 sm:h-12"
+                        />
+                    ) : (
+                        <img
+                            src={assets.arrow_forw}
+                            alt="arrow icon"
+                            className="p-2 bg-transparent text-gray-400 border border-[#DFD0E9] rounded-full opacity-50 cursor-not-allowed h-9 sm:h-12"
+                        />
+                    )}
+                </div>
+            )}
         </div>
     );
 };

@@ -9,7 +9,7 @@
  */
 export const isValidSessionId = (sessionId) => {
   return (
-    sessionId && typeof sessionId === "string" && sessionId.trim().length > 0
+    sessionId && typeof sessionId === 'string' && sessionId.trim().length > 0
   );
 };
 
@@ -22,17 +22,17 @@ export const validateUploadFiles = (files) => {
   if (!files || files.length === 0) {
     return {
       isValid: false,
-      error: "No files selected",
+      error: 'No files selected',
     };
   }
 
   const filesArray = Array.isArray(files) ? files : Array.from(files);
   const maxFileSize = 10 * 1024 * 1024; // 10MB
   const allowedTypes = [
-    "application/pdf",
-    "text/plain",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    'application/pdf',
+    'text/plain',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ];
 
   for (let file of filesArray) {
@@ -70,10 +70,10 @@ export const validateConversationMessages = (messages) => {
   return messages.every(
     (msg) =>
       msg &&
-      typeof msg === "object" &&
+      typeof msg === 'object' &&
       msg.role &&
       msg.content &&
-      ["user", "assistant"].includes(msg.role)
+      ['user', 'assistant'].includes(msg.role)
   );
 };
 
@@ -83,10 +83,10 @@ export const validateConversationMessages = (messages) => {
  * @returns {Object} Validation result
  */
 export const validatePrompt = (prompt) => {
-  if (!prompt || typeof prompt !== "string") {
+  if (!prompt || typeof prompt !== 'string') {
     return {
       isValid: false,
-      error: "Prompt is required",
+      error: 'Prompt is required',
     };
   }
 
@@ -95,14 +95,14 @@ export const validatePrompt = (prompt) => {
   if (trimmedPrompt.length === 0) {
     return {
       isValid: false,
-      error: "Prompt cannot be empty",
+      error: 'Prompt cannot be empty',
     };
   }
 
   if (trimmedPrompt.length > 5000) {
     return {
       isValid: false,
-      error: "Prompt is too long. Maximum 5000 characters allowed.",
+      error: 'Prompt is too long. Maximum 5000 characters allowed.',
     };
   }
 
