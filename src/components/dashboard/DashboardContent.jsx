@@ -42,7 +42,7 @@ const DashboardContent = () => {
     // e.target.style.height = 'auto';
     // e.target.style.height = e.target.scrollHeight + "px";
   }
-  
+
   useLayoutEffect(() => {
     if (chatContainerRef.current && resultData && loading === false) {
       scrollToBottom(chatContainerRef.current, true);
@@ -83,7 +83,7 @@ const DashboardContent = () => {
         <LogoSection />
       ) : (
         <div
-          className={`flex flex-col w-[95%] sm:w-[65%] overflow-hidden transition-all duration-300 ease-in-out h-auto py-2 sm:py-4`}
+          className={`flex flex-col w-[95%] sm:w-[75%] transition-all duration-300 ease-in-out h-auto py-2 sm:py-4 bg-[rgb(246,242,234)] shadow-md rounded-xl mt-5 mb-5 overflow-auto scroll-m-1.5`}
           ref={chatContainerRef}
         >
           {(uploadStatus || uploadError) && !resultData && (

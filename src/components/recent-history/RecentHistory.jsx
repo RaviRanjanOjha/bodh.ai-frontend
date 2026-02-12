@@ -87,7 +87,7 @@ const RecentHistory = () => {
         {/* <LoadingDots></LoadingDots> */}
 
         {/* Skeleton Loader */}
-        <Card className="h-auto max-h-[150px] w-80 overflow-hidden overflow-y-auto bg-[rgba(223,208,233,0.45)] rounded-lg card-border scroll-hide">
+        <Card className="h-auto max-h-[150px] w-96 overflow-hidden overflow-y-auto rounded-lg card-border scroll-hide">
           <List>
             {/* Loader 1 */}
             <ListItem className="divider rounded-none text-sm flex flex-col justify-between">
