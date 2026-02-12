@@ -87,7 +87,7 @@ const RecentHistory = () => {
         {/* <LoadingDots></LoadingDots> */}
 
         {/* Skeleton Loader */}
-        <Card className="h-auto max-h-[150px] w-60 overflow-hidden overflow-y-auto bg-[rgba(223,208,233,0.45)] rounded-lg card-border scroll-hide">
+        <Card className="h-auto max-h-[150px] w-80 overflow-hidden overflow-y-auto bg-[rgba(223,208,233,0.45)] rounded-lg card-border scroll-hide">
           <List>
             {/* Loader 1 */}
             <ListItem className="divider rounded-none text-sm flex flex-col justify-between">
@@ -143,62 +143,61 @@ const RecentHistory = () => {
           </Typography>
         </div>
         <div className="flex-1 px-3 pb-3">
-        <List>
-          {history.map((chat) => {
-            return (
-              
-              <ListItem
-                className="divider rounded-none text-sm flex justify-between"
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <ListItemPrefix
+          <List>
+            {history.map((chat) => {
+              return (
+                <ListItem
+                  className="divider rounded-none text-sm flex justify-between"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setShowSkeleton(true);
-                    fetchConversationDetails(chat.session_id);
-                    isMobileView &&
-                      !isNavigationCollapsed &&
-                      setToggleNavigation();
                   }}
                 >
-                  {chat.summary}{" "}
-                </ListItemPrefix>
-                <ListItemSuffix>
-                  <Menu lockScroll={true}>
-                    <MenuHandler>
-                      <div className="ml-3">
-                        <button className="p-1">
-                          <FaEllipsisH />
-                        </button>
-                      </div>
-                    </MenuHandler>
-                    <MenuList className="bg-[#ece3f2] border-slate-400 rounded-md w-38">
-                      <MenuItem
-                        className="text-gray-700 hover:bg-gray-300 flex items-center gap-2 p-1"
-                        onClick={() => handleToggleFavorite(chat.session_id)}
-                      >
-                        <FaStar className="h-3 w-3 text-gray-700" />
-                        Quick Queries
-                      </MenuItem>
-                      <MenuItem
-                        className="text-gray-700 hover:bg-gray-300 flex items-center gap-2 p-1"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteConversation(chat.session_id);
-                        }}
-                      >
-                        <FaTrash className="h-3 w-3 text-gray-700" />
-                        Delete
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </ListItemSuffix>
-              </ListItem>
-            );
-          })}
-        </List>
+                  <ListItemPrefix
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowSkeleton(true);
+                      fetchConversationDetails(chat.session_id);
+                      isMobileView &&
+                        !isNavigationCollapsed &&
+                        setToggleNavigation();
+                    }}
+                  >
+                    {chat.summary}{" "}
+                  </ListItemPrefix>
+                  <ListItemSuffix>
+                    <Menu lockScroll={true}>
+                      <MenuHandler>
+                        <div className="ml-3">
+                          <button className="p-1">
+                            <FaEllipsisH />
+                          </button>
+                        </div>
+                      </MenuHandler>
+                      <MenuList className="bg-[#ece3f2] border-slate-400 rounded-md w-38">
+                        <MenuItem
+                          className="text-gray-700 hover:bg-gray-300 flex items-center gap-2 p-1"
+                          onClick={() => handleToggleFavorite(chat.session_id)}
+                        >
+                          <FaStar className="h-3 w-3 text-gray-700" />
+                          Quick Queries
+                        </MenuItem>
+                        <MenuItem
+                          className="text-gray-700 hover:bg-gray-300 flex items-center gap-2 p-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteConversation(chat.session_id);
+                          }}
+                        >
+                          <FaTrash className="h-3 w-3 text-gray-700" />
+                          Delete
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </ListItemSuffix>
+                </ListItem>
+              );
+            })}
+          </List>
         </div>
       </div>
     </Card>

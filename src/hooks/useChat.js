@@ -59,7 +59,6 @@ export const useChat = () => {
     try {
       await fetch(`${API_BASE_URL}/chat/stop`, {
         method: "POST",
-        credentials: "include",
       });
     } catch (error) {
       console.error("Failed to stop response generation: ", error);

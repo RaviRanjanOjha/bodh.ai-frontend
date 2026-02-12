@@ -347,7 +347,6 @@ const ContextProvider = (props) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
         body: JSON.stringify({
           audio_data: base64Audio,
           language,
@@ -376,7 +375,6 @@ const ContextProvider = (props) => {
     try {
       await fetch(`${API_BASE_URL}/chat/stop`, {
         method: 'POST',
-        credentials: 'include',
       });
     } catch (error) {
       console.error('Failed to stop response generation: ', error);

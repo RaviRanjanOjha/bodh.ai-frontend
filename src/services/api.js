@@ -20,7 +20,6 @@ export const chat = async (message, sessionId = null) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
-    credentials: "include",
   });
  
   console.log("🔵 Response status:", response.status);
@@ -38,9 +37,7 @@ export const chat = async (message, sessionId = null) => {
  
 export const getConversationHistory = async () => {
   console.log("🟦 Fetching conversation history...");
-  const response = await fetch(`${API_BASE_URL}/chat/history`, {
-    credentials: "include",
-  });
+  const response = await fetch(`${API_BASE_URL}/chat/history`);
  
   console.log("🟦 History response status:", response.status);
  
@@ -60,9 +57,7 @@ export const getConversationHistory = async () => {
   return data;
 };
 export const getConversationDetails = async (sessionId) => {
-  const response = await fetch(`${API_BASE_URL}/chat/history/${sessionId}`, {
-    credentials: "include",
-  });
+  const response = await fetch(`${API_BASE_URL}/chat/history/${sessionId}`);
  
   if (!response.ok) {
     const errorData = await response.json();
@@ -96,7 +91,6 @@ export const uploadDocuments = async (files) => {
   const response = await fetch(`${API_BASE_URL}/documents/upload`, {
     method: "POST",
     body: formData,
-    credentials: "include",
   });
  
   if (!response.ok) {
@@ -116,7 +110,6 @@ export const search_convo = async (query, limit) => {
       query,
       limit, // Ensure we always send session_id even if null
     }),
-    credentials: "include",
   });
   if (!response.ok) {
     const errorData = await response.json();
@@ -132,7 +125,6 @@ export const queryDocuments = async (query, max_results = 3) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ query, max_results }),
-    credentials: "include",
   });
  
   if (!response.ok) {
@@ -150,7 +142,6 @@ export const deleteConversation = async (sessionId) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
   });
  
   console.log("🗑️ Delete response status:", response.status);
@@ -173,7 +164,6 @@ export const querySimulatedDb = async (prompt) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ prompt }),
-    credentials: "include",
   });
  
   if (!response.ok) {
@@ -185,11 +175,7 @@ export const querySimulatedDb = async (prompt) => {
  
 export const getSuggestions = async (sessionId) => {
   const response = await fetch(
-    `${API_BASE_URL}/chat/followup-questions/${sessionId}`,
-    {
-      credentials: "include",
-    }
-  );
+    `${API_BASE_URL}/chat/followup-questions/${sessionId}`);
   if (!response.ok) throw new Error("failed to fetch the suggestions");
   return response.json();
 };
@@ -203,7 +189,6 @@ export const toggleFavoriteConversation = async (sessionId) => {
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
   });
  
   console.log("⭐ Toggle favorite response status:", response.status);
@@ -222,9 +207,7 @@ export const toggleFavoriteConversation = async (sessionId) => {
 export const getFavoriteConversations = async () => {
   console.log("⭐ Fetching favorite conversations...");
  
-  const response = await fetch(`${API_BASE_URL}/chat/favorites`, {
-    credentials: "include",
-  });
+  const response = await fetch(`${API_BASE_URL}/chat/favorites`);
  
   console.log("⭐ Favorites response status:", response.status);
  
@@ -254,7 +237,6 @@ export const reorderFavorites = async (newOrder) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ new_order: newOrder }),
-    credentials: "include",
   });
  
   console.log("⭐ Reorder favorites response status:", response.status);
